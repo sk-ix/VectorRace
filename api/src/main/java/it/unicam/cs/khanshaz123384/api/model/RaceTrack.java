@@ -26,8 +26,6 @@
 package it.unicam.cs.khanshaz123384.api.model;
 
 
-import it.unicam.cs.khanshaz123384.api.utils.FileIO;
-
 import java.util.List;
 
 /**

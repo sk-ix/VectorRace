@@ -1,6 +1,5 @@
 package it.unicam.cs.khanshaz123384.app;
 
-import it.unicam.cs.khanshaz123384.api.utils.FileIO;
 import it.unicam.cs.khanshaz123384.api.model.RaceTrack;
 import it.unicam.cs.khanshaz123384.api.model.iPlayer;
 import javafx.application.Application;
