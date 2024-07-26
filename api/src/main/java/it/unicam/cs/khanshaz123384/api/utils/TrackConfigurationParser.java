@@ -26,14 +26,15 @@ package it.unicam.cs.khanshaz123384.api.utils;
 
 import it.unicam.cs.khanshaz123384.api.model.BotPlayer;
 import it.unicam.cs.khanshaz123384.api.model.HumanPlayer;
-import it.unicam.cs.khanshaz123384.api.model.iPlayer;
+import it.unicam.cs.khanshaz123384.api.model.Player;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrackConfigurationParser implements iConfigurationParser {
+public class TrackConfigurationParser implements IConfigurationParser {
 
-    private static final int EXPECTED_ROWS = 33;
-    private static final int EXPECTED_COLS = 61;
+    private static final int EXPECTED_ROWS = 32;
+    private static final int EXPECTED_COLS = 60;
 
     @Override
     public TrackConfiguration parse(List<String> lines) {
@@ -62,7 +63,7 @@ public class TrackConfigurationParser implements iConfigurationParser {
         }
 
         char[][] grid = parseGrid(gridLines);
-        List<iPlayer> players = parsePlayers(playerLines);
+        List<Player> players = parsePlayers(playerLines);
 
         if (players.isEmpty()) {
             throw new IllegalArgumentException("No players specified in the configuration file.");
@@ -103,7 +104,7 @@ public class TrackConfigurationParser implements iConfigurationParser {
             throw new IllegalArgumentException("Grid must have exactly " + EXPECTED_ROWS + " rows.");
         }
 
-        int cols = gridLines.get(0).length();
+        int cols = gridLines.getFirst().length();
         if (cols != EXPECTED_COLS) {
             throw new IllegalArgumentException("Grid must have exactly " + EXPECTED_COLS + " columns.");
         }
@@ -140,12 +141,12 @@ public class TrackConfigurationParser implements iConfigurationParser {
         return grid;
     }
 
-    private List<iPlayer> parsePlayers(List<String> playerLines) {
+    private List<Player> parsePlayers(List<String> playerLines) {
         if (playerLines == null || playerLines.isEmpty()) {
             throw new IllegalStateException("Player lines cannot be null or empty.");
         }
 
-        List<iPlayer> players = new ArrayList<>();
+        List<Player> players = new ArrayList<>();
 
         for (String line : playerLines) {
             String[] parts = line.split(",\\s*");
@@ -158,10 +159,10 @@ public class TrackConfigurationParser implements iConfigurationParser {
 
             switch (playerType) {
                 case "human":
-                    players.add(new HumanPlayer(playerName));
+                    players.add(new HumanPlayer(playerName, 0,0,0,0));
                     break;
                 case "bot":
-                    players.add(new BotPlayer(playerName));
+                    players.add(new BotPlayer(playerName,  0,0,0,0));
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown player type: " + playerType);

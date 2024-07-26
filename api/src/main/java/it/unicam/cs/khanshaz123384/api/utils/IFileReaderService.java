@@ -21,27 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package it.unicam.cs.khanshaz123384.api.utils;
 
-import it.unicam.cs.khanshaz123384.api.model.Player;
-
+import java.io.IOException;
 import java.util.List;
 
-public class TrackConfiguration {
-    private final char[][] grid;
-    private final List<Player> players;
-
-    public TrackConfiguration(char[][] grid, List<Player> players) {
-        this.grid = grid;
-        this.players = players;
-    }
-
-    public char[][] getGrid() {
-        return grid;
-    }
-
-    public List<Player> getPlayers() {
-        return players;
-    }
+public interface IFileReaderService {
+    List<String> readFile(String filePath) throws IOException;
 }

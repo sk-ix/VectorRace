@@ -22,26 +22,10 @@
  * SOFTWARE.
  */
 
-package it.unicam.cs.khanshaz123384.api.utils;
+package it.unicam.cs.khanshaz123384.app.controllers;
 
 import it.unicam.cs.khanshaz123384.api.model.Player;
 
-import java.util.List;
-
-public class TrackConfiguration {
-    private final char[][] grid;
-    private final List<Player> players;
-
-    public TrackConfiguration(char[][] grid, List<Player> players) {
-        this.grid = grid;
-        this.players = players;
-    }
-
-    public char[][] getGrid() {
-        return grid;
-    }
-
-    public List<Player> getPlayers() {
-        return players;
-    }
+public interface JoystickEventHandler {
+    void handleJoystickEvent(Player player, int deltaX, int deltaY);
 }

@@ -25,23 +25,8 @@
 package it.unicam.cs.khanshaz123384.api.utils;
 
 import it.unicam.cs.khanshaz123384.api.model.Player;
-
 import java.util.List;
 
-public class TrackConfiguration {
-    private final char[][] grid;
-    private final List<Player> players;
-
-    public TrackConfiguration(char[][] grid, List<Player> players) {
-        this.grid = grid;
-        this.players = players;
-    }
-
-    public char[][] getGrid() {
-        return grid;
-    }
-
-    public List<Player> getPlayers() {
-        return players;
-    }
+public interface IConfigurationParser {
+    TrackConfiguration parse(List<String> lines);
 }

@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TxtFileReaderService implements iFileReaderService {
+public class TxtFileReaderService implements IFileReaderService {
 
     @Override
     public List<String> readFile(String filePath) throws IOException {
