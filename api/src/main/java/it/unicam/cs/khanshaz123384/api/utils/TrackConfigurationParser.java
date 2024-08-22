@@ -33,7 +33,7 @@ import java.util.List;
 
 public class TrackConfigurationParser implements IConfigurationParser {
 
-    private static final int EXPECTED_ROWS = 32;
+    private static final int EXPECTED_ROWS = 36;
     private static final int EXPECTED_COLS = 60;
 
     @Override
@@ -147,6 +147,7 @@ public class TrackConfigurationParser implements IConfigurationParser {
         }
 
         List<Player> players = new ArrayList<>();
+        ColorGenerator colorGenerator = new ColorGenerator();
 
         for (String line : playerLines) {
             String[] parts = line.split(",\\s*");
@@ -159,10 +160,10 @@ public class TrackConfigurationParser implements IConfigurationParser {
 
             switch (playerType) {
                 case "human":
-                    players.add(new HumanPlayer(playerName, 0,0,0,0));
+                    players.add(new HumanPlayer(playerName, new int[]{9, 8},new int[]{0, 0}, colorGenerator, 0));
                     break;
                 case "bot":
-                    players.add(new BotPlayer(playerName,  0,0,0,0));
+                    players.add(new BotPlayer(playerName,  new int[]{9, 8},new int[]{0, 0}, colorGenerator, 0));
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown player type: " + playerType);
