@@ -3,7 +3,6 @@ package it.unicam.cs.khanshaz123384.api.model;
 import it.unicam.cs.khanshaz123384.api.utils.TrackConfiguration;
 
 import java.util.List;
-import java.util.Random;
 
 public class RaceSimulator {
     private final char[][] gridMap;
@@ -13,7 +12,6 @@ public class RaceSimulator {
     private int currentPlayerIndex;
     private boolean raceRunning;
     private PlayerChangeListener playerChangeListener;
-    private final Random random;
 
     public RaceSimulator(TrackConfiguration trackConfiguration) {
         this.trackConfiguration = trackConfiguration;
@@ -21,7 +19,6 @@ public class RaceSimulator {
         this.players = trackConfiguration.getPlayers();
         initializeStartingPositions();
         currentPlayerIndex = 0;
-        random = new Random();
     }
 
     private void initializeStartingPositions() {
@@ -29,21 +26,26 @@ public class RaceSimulator {
         for (Player player : players) {
             player.setPosition(startingPosition[0], startingPosition[1]);
             player.setRank(0);
+
+            // Se il giocatore è un bot, pianifica il percorso
+            if (player instanceof BotPlayer) {
+                ((BotPlayer) player).planPath(trackConfiguration);
+            }
         }
     }
 
     public void raceSimulation() {
         raceRunning = true;
+
         while (raceRunning) {
             setCurrentPlayer(currentPlayerIndex);
             System.out.println("Current Player: " + currentPlayer.getName());
             if (currentPlayer.getType().equals("Human")) {
                 waitForPlayerInput();
             } else {
-                // Simula una mossa per il bot
-                int deltaX = random.nextInt(3) - 1;
-                int deltaY = random.nextInt(3) - 1;
-                currentPlayer.updatePosition(deltaX, deltaY);
+                BotPlayer bot = (BotPlayer) currentPlayer;
+                int[] move = bot.makeMove();
+                currentPlayer.updatePosition(move[0], move[1]);
                 notifyPlayerInput(); // Avanza al prossimo giocatore
             }
             checkPosition(currentPlayer);
@@ -56,13 +58,11 @@ public class RaceSimulator {
         }
     }
 
-    private void waitForPlayerInput() {
-        synchronized (this) {
-            try {
-                this.wait();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
+    private synchronized void waitForPlayerInput() {
+        try {
+            this.wait();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -95,13 +95,16 @@ public class RaceSimulator {
         int numCols = gridMap[0].length; // Numero di colonne
         int numRows = gridMap.length;    // Numero di righe
 
-        // Converti la posizione in un valore unidimensionale
-        int start1D = startPosition[1] * numCols + startPosition[0]; // Conversione in 1D
-        int player1D = playerPosition[1] * numCols + playerPosition[0]; // Conversione in 1D
+        // Converti la posizione in un valore unidimensionale, ma seguendo un percorso orario
+        int start1D = startPosition[1] * numCols + startPosition[0];
+        int player1D = playerPosition[1] * numCols + playerPosition[0];
 
-        // Calcola la distanza unidimensionale seguendo la direzione oraria
-
-        return (player1D - start1D + numCols * numRows) % (numCols * numRows);
+        // Calcola la distanza in senso orario
+        if (player1D >= start1D) {
+            return player1D - start1D;
+        } else {
+            return (numCols * numRows) - (start1D - player1D);
+        }
     }
 
 
@@ -111,6 +114,7 @@ public class RaceSimulator {
         if(!trackConfiguration.isPositionValid(currentPlayer.getPosition())){
             System.out.println("Player " + currentPlayer.getName() + " went off track and is eliminated.");
             players.remove(currentPlayer);
+
         }
         if (players.isEmpty())
             raceRunning = false;
@@ -132,10 +136,8 @@ public class RaceSimulator {
         this.playerChangeListener = listener;
     }
 
-    public void notifyPlayerInput() {
-        synchronized (this) {
-            this.notify();
-        }
+    public synchronized void notifyPlayerInput() {
+        this.notify();
     }
 
     public interface PlayerChangeListener {

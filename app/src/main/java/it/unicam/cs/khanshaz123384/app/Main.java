@@ -8,6 +8,7 @@ import it.unicam.cs.khanshaz123384.api.utils.TrackConfiguration;
 import it.unicam.cs.khanshaz123384.api.utils.TrackConfigurationParser;
 import it.unicam.cs.khanshaz123384.app.controller.ITrackManager;
 import it.unicam.cs.khanshaz123384.app.controller.TrackManager;
+
 import it.unicam.cs.khanshaz123384.app.view.TrackUI;
 import javafx.application.Application;
 import javafx.stage.Stage;

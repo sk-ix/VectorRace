@@ -30,13 +30,7 @@ import javafx.scene.shape.Rectangle;
 
 public class CellFactory {
 
-    private final double cellSize;
-
-    public CellFactory(double cellSize) {
-        this.cellSize = cellSize;
-    }
-
-    public Pane createCellPane(char cellType) {
+    public Pane createCellPane(char cellType, double cellSize) {
         Pane cellPane = new Pane();
         cellPane.setPrefSize(cellSize, cellSize);
 

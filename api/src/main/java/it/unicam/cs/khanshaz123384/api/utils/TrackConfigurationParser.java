@@ -33,7 +33,7 @@ import java.util.List;
 
 public class TrackConfigurationParser implements IConfigurationParser {
 
-    private static final int EXPECTED_ROWS = 36;
+    private static final int EXPECTED_ROWS = 38;
     private static final int EXPECTED_COLS = 60;
 
     @Override

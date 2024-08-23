@@ -5,7 +5,7 @@ import it.unicam.cs.khanshaz123384.api.model.Player;
 import java.util.List;
 
 public class TrackConfiguration {
-    private static final int GRID_ROWS = 36;
+    private static final int GRID_ROWS = 38;
     private static final int GRID_COLS = 60;
     private final char[][] grid;
     private final List<Player> players;

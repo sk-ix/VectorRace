@@ -30,28 +30,24 @@ import javafx.scene.shape.Rectangle;
 
 public class CellBorderDecorator {
 
-    private final double CELL_SIZE;
     private final int ROWS;
     private final int COLS;
 
-    public CellBorderDecorator(double cellSize, int rows, int cols) {
-
-        this.CELL_SIZE = cellSize;
+    public CellBorderDecorator(int rows, int cols) {
         this.ROWS = rows;
         this.COLS = cols;
     }
 
-    public void addBorders(Pane cellPane, char cellType, char[][] gridMap, int row, int col) {
-        Rectangle topBorder = createBorder(CELL_SIZE, 1, 0, 0);
-        Rectangle rightBorder = createBorder(1, CELL_SIZE, CELL_SIZE - 1, 0);
-        Rectangle bottomBorder = createBorder(CELL_SIZE, 1, 0, CELL_SIZE - 1);
-        Rectangle leftBorder = createBorder(1, CELL_SIZE, 0, 0);
+    public void addBorders(Pane cellPane, char cellType, char[][] gridMap, int row, int col, double cellSize) {
+        Rectangle topBorder = createBorder(cellSize, 1, 0, 0);
+        Rectangle rightBorder = createBorder(1, cellSize, cellSize - 1, 0);
+        Rectangle bottomBorder = createBorder(cellSize, 1, 0, cellSize - 1);
+        Rectangle leftBorder = createBorder(1, cellSize, 0, 0);
 
         topBorder.setFill(Color.CYAN);
         rightBorder.setFill(Color.CYAN);
         bottomBorder.setFill(Color.CYAN);
         leftBorder.setFill(Color.CYAN);
-
 
         if (cellType != '#') {
             if (row > 0 && gridMap[row - 1][col] == '#') {
@@ -69,7 +65,6 @@ public class CellBorderDecorator {
         }
 
         cellPane.getChildren().addAll(topBorder, rightBorder, bottomBorder, leftBorder);
-
     }
 
     private Rectangle createBorder(double width, double height, double x, double y) {

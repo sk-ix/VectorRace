@@ -67,5 +67,10 @@ public class TrackManager implements ITrackManager, RaceSimulator.PlayerChangeLi
     @Override
     public void onPlayerChange(Player newPlayer) {
         this.currentPlayer = newPlayer;
+        System.out.println("Player changed to: " + newPlayer.getName());
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
     }
 }

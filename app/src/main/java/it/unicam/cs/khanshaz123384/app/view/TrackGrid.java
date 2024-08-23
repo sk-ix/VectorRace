@@ -23,7 +23,6 @@
  */
 
 package it.unicam.cs.khanshaz123384.app.view;
-
 import it.unicam.cs.khanshaz123384.api.model.Player;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -38,18 +37,21 @@ public class TrackGrid extends GridPane {
 
     private final char[][] gridMap;
     private final List<Player> players;
-    private static final int ROWS = 36;
-    private static final int COLS = 60;
-    private static final double CELL_SIZE = 38;
+    private final int ROWS = 38;
+    private final int COLS = 60;
     private final CellFactory cellFactory;
     private final CellBorderDecorator borderDecorator;
 
     public TrackGrid(char[][] gridMap, List<Player> players) {
         this.gridMap = gridMap;
         this.players = players;
-        this.cellFactory = new CellFactory(CELL_SIZE);
-        this.borderDecorator = new CellBorderDecorator(CELL_SIZE, ROWS, COLS);
+        this.cellFactory = new CellFactory();
+        this.borderDecorator = new CellBorderDecorator(ROWS, COLS);
         initializeGrid();
+
+        // Listener per aggiornare le celle quando le dimensioni della griglia cambiano
+        widthProperty().addListener((obs, oldWidth, newWidth) -> updateGrid());
+        heightProperty().addListener((obs, oldHeight, newHeight) -> updateGrid());
     }
 
     private void initializeGrid() {
@@ -58,7 +60,6 @@ public class TrackGrid extends GridPane {
         setVgap(0);
 
         createGridStructure();
-        updateGrid();
     }
 
     private void createGridStructure() {
@@ -66,7 +67,6 @@ public class TrackGrid extends GridPane {
             ColumnConstraints colConstraints = new ColumnConstraints();
             colConstraints.setHalignment(HPos.CENTER);
             colConstraints.setFillWidth(true);
-            colConstraints.setPrefWidth(CELL_SIZE);
             getColumnConstraints().add(colConstraints);
         }
 
@@ -74,7 +74,6 @@ public class TrackGrid extends GridPane {
             RowConstraints rowConstraints = new RowConstraints();
             rowConstraints.setValignment(VPos.CENTER);
             rowConstraints.setFillHeight(true);
-            rowConstraints.setPrefHeight(CELL_SIZE);
             getRowConstraints().add(rowConstraints);
         }
     }
@@ -82,10 +81,14 @@ public class TrackGrid extends GridPane {
     public void updateGrid() {
         getChildren().clear();
 
+        double cellWidth = getWidth() / COLS;
+        double cellHeight = getHeight() / ROWS;
+        double cellSize = Math.min(cellWidth, cellHeight);
+
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
-                Pane cellPane = cellFactory.createCellPane(gridMap[row][col]);
-                borderDecorator.addBorders(cellPane, gridMap[row][col], gridMap, row, col);
+                Pane cellPane = cellFactory.createCellPane(gridMap[row][col], cellSize);
+                borderDecorator.addBorders(cellPane, gridMap[row][col], gridMap, row, col, cellSize);
                 GridPane.setConstraints(cellPane, col, row);
                 add(cellPane, col, row);
             }
@@ -95,26 +98,29 @@ public class TrackGrid extends GridPane {
     }
 
     public void updatePlayerPositions() {
+        double cellSize = Math.min(getWidth() / COLS, getHeight() / ROWS);
         getChildren().removeIf(node -> node instanceof Circle);
 
         for (Player player : players) {
-            addPlayerToGrid(player);
+            addPlayerToGrid(player, cellSize);
         }
     }
 
-    private void addPlayerToGrid(Player player) {
+
+    private void addPlayerToGrid(Player player, double cellSize) {
+
         int[] currentPosition = player.getPosition();
 
-        double currentXPos = currentPosition[0] * CELL_SIZE;
-        double currentYPos = currentPosition[1] * CELL_SIZE;
+        double currentXPos = currentPosition[0] * cellSize + cellSize;
+        double currentYPos = currentPosition[1] * cellSize;
 
-        Circle playerCircle = new Circle(CELL_SIZE / 3);
+        Circle playerCircle = new Circle(cellSize / 3);
         playerCircle.setFill(Color.web(player.getColor()));
 
         playerCircle.setTranslateX(currentXPos - playerCircle.getRadius());
         playerCircle.setTranslateY(currentYPos - playerCircle.getRadius());
 
-        // Aggiungi il cerchio al GridPane
         getChildren().add(playerCircle);
     }
+
 }

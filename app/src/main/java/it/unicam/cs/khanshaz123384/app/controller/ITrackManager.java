@@ -34,4 +34,5 @@ public interface ITrackManager {
     List<Player> getPlayers();
     TrackGrid getTrackGrid();
     JoystickEventHandler getJoystickEventHandler();
+    Player getCurrentPlayer();
 }

@@ -92,7 +92,14 @@ public class JoystickView extends VBox {
         button.setStyle("-fx-background-color: lightblue; -fx-border-color: black; -fx-border-width: 1px; -fx-font-size: 20;");
         button.setTextAlignment(TextAlignment.CENTER);
 
-        button.setOnAction(event -> joystickEventHandler.handleJoystickEvent(deltaX, deltaY));
+        button.setOnAction(event -> {
+            if (joystickEventHandler != null) {
+                joystickEventHandler.handleJoystickEvent(deltaX, deltaY);
+            } else {
+                System.err.println("JoystickEventHandler not set or no players available.");
+            }
+        });
+
         return button;
     }
 }

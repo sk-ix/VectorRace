@@ -39,7 +39,7 @@ public class JoystickController implements JoystickEventHandler {
 
     @Override
     public void handleJoystickEvent(int deltaX, int deltaY) {
-        Player currentPlayer = trackManager.getPlayers().get(0); // Ottieni il giocatore corrente
+        Player currentPlayer = trackManager.getCurrentPlayer();// Ottieni il giocatore corrente
         if (currentPlayer != null) {
             currentPlayer.updatePosition(deltaX, deltaY);
             trackManager.updatePositions();
