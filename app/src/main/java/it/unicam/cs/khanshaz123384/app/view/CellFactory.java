@@ -26,6 +26,7 @@ package it.unicam.cs.khanshaz123384.app.view;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 
 public class CellFactory {
@@ -34,18 +35,48 @@ public class CellFactory {
         Pane cellPane = new Pane();
         cellPane.setPrefSize(cellSize, cellSize);
 
-        Rectangle cellBackground = new Rectangle(cellSize, cellSize);
-        cellBackground.setFill(getColorForCell(cellType));
-        cellPane.getChildren().add(cellBackground);
+        if (cellType == 'S') {
+            // Create two triangles for the 'S' cell
+            Polygon whiteTriangle = createTriangle(cellSize, Color.WHITE, true);
+            Polygon blackTriangle = createTriangle(cellSize, Color.BLACK, false);
+
+            cellPane.getChildren().addAll(whiteTriangle, blackTriangle);
+        } else if (cellType == 'F') {
+            // Create two triangles for the 'F' cell
+            Polygon blackTriangle = createTriangle(cellSize, Color.BLACK, true);
+            Polygon whiteTriangle = createTriangle(cellSize, Color.WHITE, false);
+
+            cellPane.getChildren().addAll(blackTriangle, whiteTriangle);
+        } else {
+            // Create a single rectangle for other cell types
+            Rectangle cellBackground = new Rectangle(cellSize, cellSize);
+            cellBackground.setFill(Color.WHITE);
+            cellPane.getChildren().add(cellBackground);
+        }
 
         return cellPane;
     }
 
-    private Color getColorForCell(char cellType) {
-        return switch (cellType) {
-            case 'F' -> Color.RED;
-            case 'S' -> Color.GREEN;
-            default -> Color.WHITE;
-        };
+    private Polygon createTriangle(double size, Color color, boolean isUpperTriangle) {
+        Polygon triangle = new Polygon();
+
+        // Define the points for the triangle
+        if (isUpperTriangle) {
+            triangle.getPoints().addAll(
+                    0.0, 0.0,        // Top-left corner
+                    size, 0.0,       // Top-right corner
+                    0.0, size        // Bottom-left corner
+            );
+        } else {
+            triangle.getPoints().addAll(
+                    size, size,      // Bottom-right corner
+                    size, 0.0,       // Top-right corner
+                    0.0, size        // Bottom-left corner
+            );
+        }
+
+        triangle.setFill(color);
+        return triangle;
     }
+
 }

@@ -110,35 +110,84 @@ public class TrackConfigurationParser implements IConfigurationParser {
         }
 
         char[][] grid = new char[rows][cols];
-        int startCount = 0;
-        int finishCount = 0;
+        int startCol = -1;
+        int finishCol = -1;
 
+        // Parsing della griglia iniziale e ricerca delle colonne 'S' e 'F'
         for (int i = 0; i < rows; i++) {
             String line = gridLines.get(i);
             if (line.length() != cols) {
                 throw new IllegalArgumentException("Inconsistent row length in grid configuration.");
             }
 
-            for (char c : line.toCharArray()) {
-                if (c == 'S') {
-                    startCount++;
-                } else if (c == 'F') {
-                    finishCount++;
+            grid[i] = line.toCharArray();
+
+            if (line.contains("S")) {
+                int currentStartCol = line.indexOf('S');
+                if (startCol == -1) {
+                    startCol = currentStartCol;
+                } else if (currentStartCol != startCol) {
+                    throw new IllegalArgumentException("All 'S' characters must be in the same column.");
                 }
             }
 
-            grid[i] = line.toCharArray();
+            if (line.contains("F")) {
+                int currentFinishCol = line.indexOf('F');
+                if (finishCol == -1) {
+                    finishCol = currentFinishCol;
+                } else if (currentFinishCol != finishCol) {
+                    throw new IllegalArgumentException("All 'F' characters must be in the same column.");
+                }
+            }
         }
 
-        if (startCount != 1) {
+        // Verifica che ci sia esattamente una 'S'
+        if (startCol == -1) {
             throw new IllegalArgumentException("There must be exactly one 'S' in the grid.");
         }
 
-        if (finishCount != 1) {
+        // Verifica che ci sia esattamente una 'F'
+        if (finishCol == -1) {
             throw new IllegalArgumentException("There must be exactly one 'F' in the grid.");
+        }
+        for (int row = 0; row < EXPECTED_ROWS; row++) {
+            for (int col = 0; col < EXPECTED_COLS; col++) {
+                fillVerticalCells(grid,row, col);
+            }
         }
 
         return grid;
+    }
+
+    private void fillVerticalCells(char[][] grid, int row, int col) {
+        if (grid[row][col] == 'S' || grid[row][col] == 'F') {
+            int topRow = findTopWall(grid, row, col);
+            int bottomRow = findBottomWall(grid, row, col);
+
+            char fillChar = (grid[row][col] == 'S') ? 'S' : 'F';
+
+            for (int r = topRow + 1; r < bottomRow; r++) {
+                grid[r][col] = fillChar;
+            }
+        }
+    }
+
+    private int findTopWall(char[][] gridMap, int startRow, int col) {
+        for (int row = startRow; row >= 0; row--) {
+            if (gridMap[row][col] == '#') {
+                return row;
+            }
+        }
+        return 0;
+    }
+
+    private int findBottomWall(char[][] gridMap, int startRow, int col) {
+        for (int row = startRow; row < EXPECTED_ROWS; row++) {
+            if (gridMap[row][col] == '#') {
+                return row;
+            }
+        }
+        return EXPECTED_ROWS - 1;
     }
 
     private List<Player> parsePlayers(List<String> playerLines) {
@@ -160,10 +209,10 @@ public class TrackConfigurationParser implements IConfigurationParser {
 
             switch (playerType) {
                 case "human":
-                    players.add(new HumanPlayer(playerName, new int[]{9, 8},new int[]{0, 0}, colorGenerator, 0));
+                    players.add(new HumanPlayer(playerName, new int[]{0, 0},new int[]{0, 0}, colorGenerator, 0));
                     break;
                 case "bot":
-                    players.add(new BotPlayer(playerName,  new int[]{9, 8},new int[]{0, 0}, colorGenerator, 0));
+                    players.add(new BotPlayer(playerName,  new int[]{0, 0},new int[]{0, 0}, colorGenerator, 0));
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown player type: " + playerType);

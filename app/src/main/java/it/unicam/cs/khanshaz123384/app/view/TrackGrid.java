@@ -106,7 +106,6 @@ public class TrackGrid extends GridPane {
         }
     }
 
-
     private void addPlayerToGrid(Player player, double cellSize) {
 
         int[] currentPosition = player.getPosition();
@@ -122,5 +121,5 @@ public class TrackGrid extends GridPane {
 
         getChildren().add(playerCircle);
     }
-
 }
+

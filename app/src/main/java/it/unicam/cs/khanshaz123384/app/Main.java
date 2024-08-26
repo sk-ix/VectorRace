@@ -64,4 +64,5 @@ public class Main extends Application {
         // Avvia la simulazione della gara in un thread separato
         new Thread(raceSimulator::raceSimulation).start();
     }
+
 }

@@ -3,6 +3,7 @@ package it.unicam.cs.khanshaz123384.api.model;
 import it.unicam.cs.khanshaz123384.api.utils.TrackConfiguration;
 
 import java.util.List;
+import java.util.Random;
 
 public class RaceSimulator {
     private final char[][] gridMap;
@@ -12,12 +13,14 @@ public class RaceSimulator {
     private int currentPlayerIndex;
     private boolean raceRunning;
     private PlayerChangeListener playerChangeListener;
+    private final Random random;
 
     public RaceSimulator(TrackConfiguration trackConfiguration) {
         this.trackConfiguration = trackConfiguration;
         this.gridMap = trackConfiguration.getGrid();
         this.players = trackConfiguration.getPlayers();
         initializeStartingPositions();
+        random = new Random();
         currentPlayerIndex = 0;
     }
 
@@ -26,11 +29,6 @@ public class RaceSimulator {
         for (Player player : players) {
             player.setPosition(startingPosition[0], startingPosition[1]);
             player.setRank(0);
-
-            // Se il giocatore è un bot, pianifica il percorso
-            if (player instanceof BotPlayer) {
-                ((BotPlayer) player).planPath(trackConfiguration);
-            }
         }
     }
 
@@ -43,13 +41,13 @@ public class RaceSimulator {
             if (currentPlayer.getType().equals("Human")) {
                 waitForPlayerInput();
             } else {
-                BotPlayer bot = (BotPlayer) currentPlayer;
-                int[] move = bot.makeMove();
-                currentPlayer.updatePosition(move[0], move[1]);
+                // Simula una mossa per il bot
+                int deltaX = random.nextInt(3) - 1;
+                int deltaY = random.nextInt(3) - 1;
+                currentPlayer.updatePosition(deltaX, deltaY);
                 notifyPlayerInput(); // Avanza al prossimo giocatore
             }
             checkPosition(currentPlayer);
-            updateRanking();
             if (!players.isEmpty()) {
                 currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
             } else {
@@ -65,48 +63,6 @@ public class RaceSimulator {
             Thread.currentThread().interrupt();
         }
     }
-
-    public void updateRanking() {
-
-        players.sort((p1, p2) -> {
-            int p1Distance = calculateDistanceFromStart(p1);
-            int p2Distance = calculateDistanceFromStart(p2);
-            return Integer.compare(p2Distance, p1Distance);
-        });
-
-        // Aggiorna il ranking di ogni giocatore
-        for (int i = 0; i < players.size(); i++) {
-            Player player = players.get(i);
-            player.setRank(i + 1); // Il rank parte da 1
-        }
-
-        // Stampa il ranking aggiornato
-        System.out.println("Current Ranking:");
-        for (Player player : players) {
-            System.out.println(player.getRank() + ". " + player.getName());
-        }
-    }
-
-    private int calculateDistanceFromStart(Player player) {
-        int[] startPosition = trackConfiguration.getStartPosition();
-        int[] playerPosition = player.getPosition();
-
-        // Dimensioni del circuito
-        int numCols = gridMap[0].length; // Numero di colonne
-        int numRows = gridMap.length;    // Numero di righe
-
-        // Converti la posizione in un valore unidimensionale, ma seguendo un percorso orario
-        int start1D = startPosition[1] * numCols + startPosition[0];
-        int player1D = playerPosition[1] * numCols + playerPosition[0];
-
-        // Calcola la distanza in senso orario
-        if (player1D >= start1D) {
-            return player1D - start1D;
-        } else {
-            return (numCols * numRows) - (start1D - player1D);
-        }
-    }
-
 
 
 
