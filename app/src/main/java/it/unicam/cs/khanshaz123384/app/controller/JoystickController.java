@@ -39,8 +39,8 @@ public class JoystickController implements JoystickEventHandler {
 
     @Override
     public void handleJoystickEvent(int deltaX, int deltaY) {
-        Player currentPlayer = trackManager.getCurrentPlayer();// Ottieni il giocatore corrente
-        if (currentPlayer != null) {
+        Player currentPlayer = trackManager.getCurrentPlayer();
+        if (currentPlayer != null && raceSimulator.isRaceRunning()) {
             currentPlayer.updatePosition(deltaX, deltaY);
             trackManager.updatePositions();
             raceSimulator.notifyPlayerInput();

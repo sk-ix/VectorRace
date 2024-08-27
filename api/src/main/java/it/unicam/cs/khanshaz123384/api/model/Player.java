@@ -39,10 +39,11 @@ public abstract class Player {
         return previousPosition;
     }
 
-    public void setVelocity (int newVelocityX, int newVelocityY) {
-        this.currentVelocity[0] = newVelocityX;
-        this.currentVelocity[1] = newVelocityY;
+    public int getRank() {
+        return rank;
     }
+
+    public abstract String getType();
 
     public void setPosition (int newPositionX, int newPositionY) {
         this.previousPosition = this.currentPosition.clone();
@@ -50,37 +51,29 @@ public abstract class Player {
         this.currentPosition[1] = newPositionY;
     }
 
+    public void setVelocity (int newVelocityX, int newVelocityY) {
+        this.currentVelocity[0] = newVelocityX;
+        this.currentVelocity[1] = newVelocityY;
+    }
+
     public void updatePosition(int deltaX, int deltaY) {
 
         int[] velocity = getVelocity();
         int[] position = getPosition();
 
-
-        System.out.printf("Player %s position: (%d, %d)%n", getName(), position[0] , position[1]);
-
-        System.out.printf("Player %s velocity: (%d, %d)%n", getName(), velocity[0] , velocity[1]);
-
         int newVelocityX = velocity[0] + deltaX;
         int newVelocityY = velocity[1] + deltaY;
 
-        System.out.printf("Player %s new velocity : (%d, %d)%n", getName(), newVelocityX , newVelocityY);
-
         setVelocity(newVelocityX, newVelocityY);
-        System.out.printf("Player %s new position: (%d, %d)%n", getName(), position[0] + newVelocityX, position[1] + newVelocityY);
+
         setPosition(position[0] + newVelocityX, position[1] + newVelocityY);
 
 
-    }
-
-    public int getRank() {
-        return rank;
     }
 
     public void setRank(int newRank) {
         rank = newRank;
     }
 
-
-    public abstract String getType();
 
 }

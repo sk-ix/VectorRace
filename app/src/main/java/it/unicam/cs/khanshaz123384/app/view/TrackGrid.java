@@ -110,7 +110,7 @@ public class TrackGrid extends GridPane {
 
         int[] currentPosition = player.getPosition();
 
-        double currentXPos = currentPosition[0] * cellSize + cellSize;
+        double currentXPos = currentPosition[0] * cellSize;
         double currentYPos = currentPosition[1] * cellSize;
 
         Circle playerCircle = new Circle(cellSize / 3);

@@ -19,6 +19,7 @@ import java.util.List;
 public class Main extends Application {
     private static char[][] gridMap;
     private static List<Player> players;
+    private static String direction;
 
     public static void main(String[] args) {
         // Percorso fisso del file di configurazione
@@ -35,6 +36,7 @@ public class Main extends Application {
 
             gridMap = trackConfiguration.getGrid();
             players = trackConfiguration.getPlayers();
+            direction = trackConfiguration.getDirection();
 
             // Lancia l'applicazione JavaFX
             launch(args);
@@ -49,8 +51,9 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         // Crea il simulatore di gara
-        TrackConfiguration trackConfiguration = new TrackConfiguration(gridMap, players);
+        TrackConfiguration trackConfiguration = new TrackConfiguration(gridMap, players, direction);
         RaceSimulator raceSimulator = new RaceSimulator(trackConfiguration);
+
 
         // Crea il TrackManager e passagli il RaceSimulator
         ITrackManager trackManager = new TrackManager(gridMap, players, raceSimulator);

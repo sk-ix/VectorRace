@@ -40,6 +40,7 @@ public class TrackConfigurationParser implements IConfigurationParser {
     public TrackConfiguration parse(List<String> lines) {
         List<String> gridLines = new ArrayList<>();
         List<String> playerLines = new ArrayList<>();
+        String direction = null;
 
         boolean isGrid = true;
 
@@ -55,11 +56,19 @@ public class TrackConfigurationParser implements IConfigurationParser {
                 }
                 gridLines.add(line);
             } else {
-                if (!validatePlayerLine(line)) {
-                    throw new IllegalArgumentException("Invalid player line: " + line);
+                if (line.trim().equalsIgnoreCase("Right") || line.trim().equalsIgnoreCase("Left")) {
+                    direction = line.trim().toLowerCase();
+                } else {
+                    if (!validatePlayerLine(line)) {
+                        throw new IllegalArgumentException("Invalid player line: " + line);
+                    }
+                    playerLines.add(line);
                 }
-                playerLines.add(line);
             }
+        }
+
+        if (direction == null) {
+            throw new IllegalArgumentException("No direction specified in the configuration file.");
         }
 
         char[][] grid = parseGrid(gridLines);
@@ -69,7 +78,7 @@ public class TrackConfigurationParser implements IConfigurationParser {
             throw new IllegalArgumentException("No players specified in the configuration file.");
         }
 
-        return new TrackConfiguration(grid, players);
+        return new TrackConfiguration(grid, players, direction);
     }
 
     private boolean validateGridLine(String line) {
@@ -150,9 +159,10 @@ public class TrackConfigurationParser implements IConfigurationParser {
         if (finishCol == -1) {
             throw new IllegalArgumentException("There must be exactly one 'F' in the grid.");
         }
+
         for (int row = 0; row < EXPECTED_ROWS; row++) {
             for (int col = 0; col < EXPECTED_COLS; col++) {
-                fillVerticalCells(grid,row, col);
+                fillVerticalCells(grid, row, col);
             }
         }
 
@@ -209,10 +219,10 @@ public class TrackConfigurationParser implements IConfigurationParser {
 
             switch (playerType) {
                 case "human":
-                    players.add(new HumanPlayer(playerName, new int[]{0, 0},new int[]{0, 0}, colorGenerator, 0));
+                    players.add(new HumanPlayer(playerName, new int[]{0, 0}, new int[]{0, 0}, colorGenerator, 0));
                     break;
                 case "bot":
-                    players.add(new BotPlayer(playerName,  new int[]{0, 0},new int[]{0, 0}, colorGenerator, 0));
+                    players.add(new BotPlayer(playerName, new int[]{0, 0}, new int[]{0, 0}, colorGenerator, 0));
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown player type: " + playerType);
