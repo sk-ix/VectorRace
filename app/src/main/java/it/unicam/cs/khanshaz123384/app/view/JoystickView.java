@@ -24,7 +24,7 @@
 
 package it.unicam.cs.khanshaz123384.app.view;
 
-import it.unicam.cs.khanshaz123384.app.controller.JoystickEventHandler;
+import it.unicam.cs.khanshaz123384.app.controller.Interfaces.IJoystickEventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -35,9 +35,9 @@ import javafx.scene.text.TextAlignment;
 
 public class JoystickView extends VBox {
 
-    private final JoystickEventHandler joystickEventHandler;
+    private final IJoystickEventHandler joystickEventHandler;
 
-    public JoystickView(JoystickEventHandler joystickEventHandler) {
+    public JoystickView(IJoystickEventHandler joystickEventHandler) {
         this.joystickEventHandler = joystickEventHandler;
         setSpacing(10);
         setStyle("-fx-background-color: lightblue; -fx-border-color: black; -fx-border-width: 2px;");        setPadding(new Insets(10));

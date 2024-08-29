@@ -24,30 +24,67 @@
 
 package it.unicam.cs.khanshaz123384.api.model;
 
+import it.unicam.cs.khanshaz123384.api.model.Interfaces.IPositionValidator;
+import it.unicam.cs.khanshaz123384.api.model.Interfaces.ITrackConfiguration;
+
 import java.util.List;
 
-public class PositionValidator {
-    private final TrackConfiguration trackConfiguration;
+/**
+ * Validates positions on the track according to the track configuration.
+ *
+ * This class provides methods to validate if a position is valid and if a finish line has been crossed,
+ * based on the current and previous positions of the player and the track configuration.
+ */
+public class PositionValidator implements IPositionValidator {
+    private final ITrackConfiguration trackConfiguration;
 
-    public PositionValidator(TrackConfiguration trackConfiguration) {
+    /**
+     * Constructs a PositionValidator with the specified track configuration.
+     *
+     * @param trackConfiguration The track configuration to be used for validation.
+     * @throws IllegalArgumentException if trackConfiguration is null.
+     */
+    public PositionValidator(ITrackConfiguration trackConfiguration) {
+        if (trackConfiguration == null)
+            throw new IllegalArgumentException("Track configuration cannot be null.");
+
         this.trackConfiguration = trackConfiguration;
     }
 
+    /**
+     * Checks if the current position is valid based on the previous position and track configuration.
+     *
+     * Validity is determined by ensuring the position is within bounds and not blocked,
+     * and by checking if the movement adheres to the track's direction constraints.
+     *
+     * @param currentPosition The current position of the player, represented as an array [x, y].
+     * @param previousPosition The previous position of the player, represented as an array [x, y].
+     * @return {@code true} if the current position is valid; {@code false} otherwise.
+     * @throws IllegalArgumentException if currentPosition or previousPosition is null or not properly formatted.
+     * @throws IllegalStateException if no start positions are found in the track configuration.
+     */
     public boolean isPositionValid(int[] currentPosition, int[] previousPosition) {
+        if (currentPosition == null || previousPosition == null)
+            throw new IllegalArgumentException("Positions cannot be null.");
+
+        if (currentPosition.length != 2 || previousPosition.length != 2)
+            throw new IllegalArgumentException("Position arrays must contain exactly two elements: [x, y].");
+
+
         if (!trackConfiguration.isPositionWithinBounds(currentPosition[0], currentPosition[1]) ||
-                trackConfiguration.isPositionBlocked(currentPosition[0], currentPosition[1])) {
+                trackConfiguration.isPositionBlocked(currentPosition[0], currentPosition[1]))
             return false;
-        }
+
 
         List<int[]> startingPositions = trackConfiguration.getStartPositions();
-        if (startingPositions.isEmpty()) {
+        if (startingPositions.isEmpty())
             throw new IllegalStateException("No start positions found.");
-        }
+
 
         for (int[] startingPosition : startingPositions) {
             if (previousPosition[1] == startingPosition[1]) {
-                boolean isCurrentBehindStart = false;
-                boolean isPreviousAheadStart = false;
+                boolean isCurrentBehindStart;
+                boolean isPreviousAheadStart;
 
                 if ("right".equals(trackConfiguration.direction())) {
                     isPreviousAheadStart = previousPosition[0] >= startingPosition[0];
@@ -55,29 +92,50 @@ public class PositionValidator {
                 } else if ("left".equals(trackConfiguration.direction())) {
                     isPreviousAheadStart = previousPosition[0] <= startingPosition[0];
                     isCurrentBehindStart = currentPosition[0] > startingPosition[0];
-                }
+                } else
+                    throw new IllegalStateException("Direction in track configuration is not valid.");
 
-                if (isCurrentBehindStart && isPreviousAheadStart) {
+                if (isCurrentBehindStart && isPreviousAheadStart)
                     return false;
-                }
+
             }
         }
 
         return true;
     }
 
+    /**
+     * Checks if the finish line has been crossed between the previous and current positions.
+     *
+     * The finish line is considered crossed if the current position is past the finish line
+     * relative to the previous position, based on the track's direction.
+     *
+     * @param currentPosition The current position of the player, represented as an array [x, y].
+     * @param previousPosition The previous position of the player, represented as an array [x, y].
+     * @return {@code true} if the finish line has been crossed; {@code false} otherwise.
+     * @throws IllegalArgumentException if currentPosition or previousPosition is null or not properly formatted.
+     */
     public boolean isFinishLineCrossed(int[] currentPosition, int[] previousPosition) {
+        if (currentPosition == null || previousPosition == null)
+            throw new IllegalArgumentException("Positions cannot be null.");
+
+        if (currentPosition.length != 2 || previousPosition.length != 2)
+            throw new IllegalArgumentException("Position arrays must contain exactly two elements: [x, y].");
+
+
         for (int[] finishPosition : trackConfiguration.getFinishPositions()) {
             if (currentPosition[1] == finishPosition[1]) {
                 if ("right".equals(trackConfiguration.direction())) {
-                    if (previousPosition[0] < finishPosition[0] && currentPosition[0] >= finishPosition[0]) {
+                    if (previousPosition[0] < finishPosition[0] && currentPosition[0] >= finishPosition[0])
                         return true;
-                    }
+
                 } else if ("left".equals(trackConfiguration.direction())) {
-                    if (previousPosition[0] > finishPosition[0] && currentPosition[0] <= finishPosition[0]) {
+                    if (previousPosition[0] > finishPosition[0] && currentPosition[0] <= finishPosition[0])
                         return true;
-                    }
-                }
+
+                } else
+                    throw new IllegalStateException("Direction in track configuration is not valid.");
+
             }
         }
         return false;

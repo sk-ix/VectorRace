@@ -22,23 +22,26 @@
  * SOFTWARE.
  */
 
-package it.unicam.cs.khanshaz123384.app.controller;
+package it.unicam.cs.khanshaz123384.app.utils;
 
-import it.unicam.cs.khanshaz123384.app.controller.Interfaces.IJoystickEventHandler;
-import it.unicam.cs.khanshaz123384.app.controller.Interfaces.IRaceSimulator;
+import it.unicam.cs.khanshaz123384.api.model.TrackConfiguration;
+import it.unicam.cs.khanshaz123384.api.utils.*;
+import it.unicam.cs.khanshaz123384.api.utils.Interfaces.IColorGenerator;
+import it.unicam.cs.khanshaz123384.api.utils.Interfaces.IConfigurationParser;
+import it.unicam.cs.khanshaz123384.api.utils.Interfaces.IFileReaderService;
+import it.unicam.cs.khanshaz123384.api.utils.Interfaces.IPlayerParser;
 
-public class JoystickController implements IJoystickEventHandler {
+import java.io.IOException;
+import java.util.List;
 
-    private final IRaceSimulator raceSimulator;
+public class ConfigurationLoader {
+    public TrackConfiguration loadConfiguration(String filePath) throws IOException, IllegalArgumentException {
+        IFileReaderService fileReaderService = new TxtFileReaderService();
+        IColorGenerator colorGenerator = new ColorGenerator();
+        IPlayerParser playerParser = new PlayerParser(colorGenerator);
+        IConfigurationParser parser = new TrackConfigurationParser(playerParser);
 
-    public JoystickController(IRaceSimulator raceSimulator) {
-        this.raceSimulator = raceSimulator;
-    }
-
-    @Override
-    public void handleJoystickEvent(int deltaX, int deltaY) {
-        if (raceSimulator.isRaceRunning()) {
-            raceSimulator.notifyPlayerInput(deltaX, deltaY);
-        }
+        List<String> lines = fileReaderService.readFile(filePath);
+        return parser.parse(lines);
     }
 }

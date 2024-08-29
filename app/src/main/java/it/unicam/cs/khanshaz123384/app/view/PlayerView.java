@@ -24,7 +24,8 @@
 
 package it.unicam.cs.khanshaz123384.app.view;
 
-import it.unicam.cs.khanshaz123384.api.model.Player;
+import it.unicam.cs.khanshaz123384.api.model.Interfaces.IPlayer;
+
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -36,34 +37,34 @@ import java.util.List;
 
 public class PlayerView extends VBox {
 
-    public PlayerView(List<Player> players) {
+    public PlayerView(List<IPlayer> players) {
         setPrefWidth(200);
         setSpacing(10);
         setStyle("-fx-background-color: lightblue; -fx-border-color: black; -fx-border-width: 2px;");
         getChildren().add(createTitleLabel());
 
-        for (Player player : players) {
-            getChildren().add(createPlayerHBox(player, player.getRank()));
+        for (IPlayer player : players) {
+            getChildren().add(createPlayerHBox(player));
         }
         setAlignment(Pos.CENTER);
     }
 
     private Label createTitleLabel() {
-        Label titleLabel = new Label("Player Ranking");
+        Label titleLabel = new Label("Player List");
         titleLabel.setStyle("-fx-font-size: 16; -fx-font-weight: bold;");
         return titleLabel;
     }
 
-    private HBox createPlayerHBox(Player player, int rank) {
+    private HBox createPlayerHBox(IPlayer player) {
         Circle colorCircle = new Circle(8);
         colorCircle.setFill(Color.web(player.getColor()));
 
-        Label playerLabel = new Label(rank + ". " + player.getName());
+        Label playerLabel = new Label(player.getName());
         playerLabel.setStyle("-fx-font-size: 14;");
 
         HBox playerHBox = new HBox(5);
         playerHBox.setAlignment(Pos.CENTER);
-        playerHBox.getChildren().addAll(playerLabel, colorCircle);
+        playerHBox.getChildren().addAll(colorCircle, playerLabel);
 
         return playerHBox;
     }

@@ -22,8 +22,10 @@
  * SOFTWARE.
  */
 
-package it.unicam.cs.khanshaz123384.app.view;
-import it.unicam.cs.khanshaz123384.api.model.Player;
+package it.unicam.cs.khanshaz123384.app.model;
+import it.unicam.cs.khanshaz123384.api.model.Interfaces.IPlayer;
+import it.unicam.cs.khanshaz123384.app.utils.CellBorderDecorator;
+import it.unicam.cs.khanshaz123384.app.utils.CellFactory;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -33,16 +35,16 @@ import javafx.scene.shape.Circle;
 
 import java.util.List;
 
-public class TrackGrid extends GridPane {
+public class TrackGrid extends GridPane implements ITrackGrid {
 
     private final char[][] gridMap;
-    private final List<Player> players;
+    private final List<IPlayer> players;
     private final int ROWS = 38;
     private final int COLS = 60;
     private final CellFactory cellFactory;
     private final CellBorderDecorator borderDecorator;
 
-    public TrackGrid(char[][] gridMap, List<Player> players) {
+    public TrackGrid(char[][] gridMap, List<IPlayer> players) {
         this.gridMap = gridMap;
         this.players = players;
         this.cellFactory = new CellFactory();
@@ -101,12 +103,12 @@ public class TrackGrid extends GridPane {
         double cellSize = Math.min(getWidth() / COLS, getHeight() / ROWS);
         getChildren().removeIf(node -> node instanceof Circle);
 
-        for (Player player : players) {
+        for (IPlayer player : players) {
             addPlayerToGrid(player, cellSize);
         }
     }
 
-    private void addPlayerToGrid(Player player, double cellSize) {
+    private void addPlayerToGrid(IPlayer player, double cellSize) {
 
         int[] currentPosition = player.getPosition();
 

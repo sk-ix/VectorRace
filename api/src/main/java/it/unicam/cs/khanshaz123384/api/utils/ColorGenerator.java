@@ -24,6 +24,8 @@
 
 package it.unicam.cs.khanshaz123384.api.utils;
 
+import it.unicam.cs.khanshaz123384.api.utils.Interfaces.IColorGenerator;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

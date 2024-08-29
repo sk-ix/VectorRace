@@ -22,23 +22,12 @@
  * SOFTWARE.
  */
 
-package it.unicam.cs.khanshaz123384.app.controller;
+package it.unicam.cs.khanshaz123384.api.utils.Interfaces;
 
-import it.unicam.cs.khanshaz123384.app.controller.Interfaces.IJoystickEventHandler;
-import it.unicam.cs.khanshaz123384.app.controller.Interfaces.IRaceSimulator;
+import it.unicam.cs.khanshaz123384.api.model.TrackConfiguration;
 
-public class JoystickController implements IJoystickEventHandler {
+import java.util.List;
 
-    private final IRaceSimulator raceSimulator;
-
-    public JoystickController(IRaceSimulator raceSimulator) {
-        this.raceSimulator = raceSimulator;
-    }
-
-    @Override
-    public void handleJoystickEvent(int deltaX, int deltaY) {
-        if (raceSimulator.isRaceRunning()) {
-            raceSimulator.notifyPlayerInput(deltaX, deltaY);
-        }
-    }
+public interface IConfigurationParser {
+    TrackConfiguration parse(List<String> lines);
 }

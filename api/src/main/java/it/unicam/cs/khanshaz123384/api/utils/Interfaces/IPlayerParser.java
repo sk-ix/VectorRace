@@ -22,8 +22,12 @@
  * SOFTWARE.
  */
 
-package it.unicam.cs.khanshaz123384.app.controller;
+package it.unicam.cs.khanshaz123384.api.utils.Interfaces;
 
-public interface JoystickEventHandler {
-    void handleJoystickEvent(int deltaX, int deltaY);
+import it.unicam.cs.khanshaz123384.api.model.Interfaces.IPlayer;
+
+import java.util.List;
+
+public interface IPlayerParser {
+    List<IPlayer> parsePlayers(List<String> playerLines);
 }

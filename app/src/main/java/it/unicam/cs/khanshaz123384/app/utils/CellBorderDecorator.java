@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package it.unicam.cs.khanshaz123384.app.view;
+package it.unicam.cs.khanshaz123384.app.utils;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;

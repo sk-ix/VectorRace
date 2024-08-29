@@ -24,52 +24,48 @@
 
 package it.unicam.cs.khanshaz123384.app.controller;
 
-import it.unicam.cs.khanshaz123384.api.model.Player;
-import it.unicam.cs.khanshaz123384.api.model.RaceSimulator;
-import it.unicam.cs.khanshaz123384.app.view.TrackGrid;
+import it.unicam.cs.khanshaz123384.api.model.Interfaces.IPlayer;
+import it.unicam.cs.khanshaz123384.app.controller.Interfaces.IJoystickEventHandler;
+import it.unicam.cs.khanshaz123384.app.controller.Interfaces.IRaceSimulator;
+import it.unicam.cs.khanshaz123384.app.controller.Interfaces.ITrackManager;
+import it.unicam.cs.khanshaz123384.app.model.ITrackGrid;
+import it.unicam.cs.khanshaz123384.app.model.TrackGrid;
+import it.unicam.cs.khanshaz123384.app.utils.IPlayerChangeListener;
+import javafx.application.Platform;
 
 import java.util.List;
 
-public class TrackManager implements ITrackManager, RaceSimulator.PlayerChangeListener {
+public class TrackManager implements ITrackManager, IPlayerChangeListener {
 
-    private final TrackGrid trackGrid;
-    private final List<Player> players;
-    private final JoystickEventHandler joystickEventHandler;
-    private Player currentPlayer;
+    private final ITrackGrid trackGrid;
+    private final List<IPlayer> players;
+    private final IJoystickEventHandler joystickEventHandler;
 
-    public TrackManager(char[][] gridMap, List<Player> players, RaceSimulator raceSimulator) {
+    public TrackManager(char[][] gridMap, List<IPlayer> players, IRaceSimulator raceSimulator) {
         this.players = players;
         this.trackGrid = new TrackGrid(gridMap, players);
-        this.joystickEventHandler = new JoystickController(this, raceSimulator);
+        this.joystickEventHandler = new JoystickController(raceSimulator);
         raceSimulator.setPlayerChangeListener(this);
     }
 
     @Override
-    public void updatePositions() {
-        trackGrid.updatePlayerPositions();
-    }
-
-    @Override
-    public List<Player> getPlayers() {
+    public List<IPlayer> getPlayers() {
         return players;
     }
 
     @Override
-    public TrackGrid getTrackGrid() {
+    public ITrackGrid getTrackGrid() {
         return trackGrid;
     }
 
     @Override
-    public JoystickEventHandler getJoystickEventHandler() {
+    public IJoystickEventHandler getJoystickEventHandler() {
         return joystickEventHandler;
     }
 
     @Override
-    public void onPlayerChange(Player newPlayer) {
-        this.currentPlayer = newPlayer;
+    public void onPlayerChange(IPlayer newPlayer) {
+        Platform.runLater(trackGrid::updatePlayerPositions);
     }
 
-    public Player getCurrentPlayer() {
-        return currentPlayer;
-    }
 }

@@ -22,12 +22,13 @@
  * SOFTWARE.
  */
 
-package it.unicam.cs.khanshaz123384.api.utils;
+package it.unicam.cs.khanshaz123384.app.controller.Interfaces;
 
-import it.unicam.cs.khanshaz123384.api.model.TrackConfiguration;
+import it.unicam.cs.khanshaz123384.app.utils.IPlayerChangeListener;
 
-import java.util.List;
-
-public interface IConfigurationParser {
-    TrackConfiguration parse(List<String> lines);
+public interface IRaceSimulator {
+    void raceSimulation();
+    boolean isRaceRunning();
+    void setPlayerChangeListener(IPlayerChangeListener listener);
+    void notifyPlayerInput(int deltaX,int deltaY);
 }

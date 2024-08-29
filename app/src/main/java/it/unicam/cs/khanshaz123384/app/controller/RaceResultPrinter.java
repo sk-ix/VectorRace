@@ -22,8 +22,24 @@
  * SOFTWARE.
  */
 
-package it.unicam.cs.khanshaz123384.api.utils;
+package it.unicam.cs.khanshaz123384.app.controller;
 
-public interface IColorGenerator {
-    String getRandomColor();
+import it.unicam.cs.khanshaz123384.api.model.Interfaces.IPlayer;
+import it.unicam.cs.khanshaz123384.app.controller.Interfaces.IRaceResultPrinter;
+import it.unicam.cs.khanshaz123384.app.controller.Interfaces.IPlayerManager;
+
+public class RaceResultPrinter implements IRaceResultPrinter {
+    private final IPlayerManager playerManager;
+
+    public RaceResultPrinter(IPlayerManager playerManager) {
+        this.playerManager = playerManager;
+    }
+
+    @Override
+    public void printRankings() {
+        System.out.println("Final Rankings:");
+        for (IPlayer player : playerManager.getFinishedPlayers()) {
+            System.out.println((player.getRank()) + ". " + player.getName());
+        }
+    }
 }

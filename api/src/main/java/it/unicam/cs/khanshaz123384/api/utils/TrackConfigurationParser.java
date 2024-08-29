@@ -25,15 +25,18 @@
 package it.unicam.cs.khanshaz123384.api.utils;
 
 import it.unicam.cs.khanshaz123384.api.model.*;
+import it.unicam.cs.khanshaz123384.api.model.Interfaces.IPlayer;
+import it.unicam.cs.khanshaz123384.api.utils.Interfaces.IConfigurationParser;
+import it.unicam.cs.khanshaz123384.api.utils.Interfaces.IPlayerParser;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TrackConfigurationParser implements IConfigurationParser {
 
-    private final PlayerParser playerParser;
+    private final IPlayerParser playerParser;
 
-    public TrackConfigurationParser(PlayerParser playerParser) {
+    public TrackConfigurationParser(IPlayerParser playerParser) {
         this.playerParser = playerParser;
     }
 
@@ -70,7 +73,7 @@ public class TrackConfigurationParser implements IConfigurationParser {
         }
 
         char[][] grid = GridParser.parseGrid(gridLines); // Call static method
-        List<Player> players = playerParser.parsePlayers(playerLines);
+        List<IPlayer> players = playerParser.parsePlayers(playerLines);
 
         if (players.isEmpty()) {
             throw new IllegalArgumentException("No players specified in the configuration file.");

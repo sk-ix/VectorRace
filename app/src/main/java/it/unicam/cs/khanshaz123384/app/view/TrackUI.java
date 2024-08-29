@@ -24,8 +24,10 @@
 
 package it.unicam.cs.khanshaz123384.app.view;
 
-import it.unicam.cs.khanshaz123384.app.controller.ITrackManager;
+import it.unicam.cs.khanshaz123384.app.controller.Interfaces.ITrackManager;
+import it.unicam.cs.khanshaz123384.app.model.ITrackGrid;
 import javafx.application.Application;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -48,9 +50,9 @@ public class TrackUI extends Application {
         BorderPane borderPane = new BorderPane();
         PlayerView playerView = new PlayerView(trackManager.getPlayers());
         JoystickView joystickView = new JoystickView(trackManager.getJoystickEventHandler());
-        TrackGrid trackGrid = trackManager.getTrackGrid();
+        ITrackGrid trackGrid = trackManager.getTrackGrid();
 
-        ScrollPane scrollPane = new ScrollPane(trackGrid);
+        ScrollPane scrollPane = new ScrollPane((Node) trackGrid);
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(true);
 

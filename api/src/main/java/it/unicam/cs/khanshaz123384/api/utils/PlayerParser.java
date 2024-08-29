@@ -26,25 +26,27 @@ package it.unicam.cs.khanshaz123384.api.utils;
 
 import it.unicam.cs.khanshaz123384.api.model.BotPlayer;
 import it.unicam.cs.khanshaz123384.api.model.HumanPlayer;
-import it.unicam.cs.khanshaz123384.api.model.Player;
+import it.unicam.cs.khanshaz123384.api.model.Interfaces.IPlayer;
+import it.unicam.cs.khanshaz123384.api.utils.Interfaces.IColorGenerator;
+import it.unicam.cs.khanshaz123384.api.utils.Interfaces.IPlayerParser;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayerParser {
+public class PlayerParser implements IPlayerParser {
 
-    private final ColorGenerator colorGenerator;
+    private final IColorGenerator colorGenerator;
 
-    public PlayerParser(ColorGenerator colorGenerator) {
+    public PlayerParser(IColorGenerator colorGenerator) {
         this.colorGenerator = colorGenerator;
     }
 
-    public List<Player> parsePlayers(List<String> playerLines) {
+    public List<IPlayer> parsePlayers(List<String> playerLines) {
         if (playerLines == null || playerLines.isEmpty()) {
             throw new IllegalStateException("Player lines cannot be null or empty.");
         }
 
-        List<Player> players = new ArrayList<>();
+        List<IPlayer> players = new ArrayList<>();
 
         for (String line : playerLines) {
             if (!validatePlayerLine(line)) {

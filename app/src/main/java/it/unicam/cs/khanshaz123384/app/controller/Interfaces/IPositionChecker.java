@@ -22,11 +22,10 @@
  * SOFTWARE.
  */
 
-package it.unicam.cs.khanshaz123384.api.utils;
+package it.unicam.cs.khanshaz123384.app.controller.Interfaces;
 
-import java.io.IOException;
-import java.util.List;
+import it.unicam.cs.khanshaz123384.api.model.Interfaces.IPlayer;
 
-public interface IFileReaderService {
-    List<String> readFile(String filePath) throws IOException;
+public interface IPositionChecker {
+    void checkPosition(IPlayer player);
 }

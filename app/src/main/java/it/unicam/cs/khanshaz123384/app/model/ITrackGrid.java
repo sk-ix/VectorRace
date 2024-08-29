@@ -22,23 +22,10 @@
  * SOFTWARE.
  */
 
-package it.unicam.cs.khanshaz123384.app.controller;
+package it.unicam.cs.khanshaz123384.app.model;
 
-import it.unicam.cs.khanshaz123384.app.controller.Interfaces.IJoystickEventHandler;
-import it.unicam.cs.khanshaz123384.app.controller.Interfaces.IRaceSimulator;
+public interface ITrackGrid {
+    void updateGrid();
+    void updatePlayerPositions();
 
-public class JoystickController implements IJoystickEventHandler {
-
-    private final IRaceSimulator raceSimulator;
-
-    public JoystickController(IRaceSimulator raceSimulator) {
-        this.raceSimulator = raceSimulator;
-    }
-
-    @Override
-    public void handleJoystickEvent(int deltaX, int deltaY) {
-        if (raceSimulator.isRaceRunning()) {
-            raceSimulator.notifyPlayerInput(deltaX, deltaY);
-        }
-    }
 }

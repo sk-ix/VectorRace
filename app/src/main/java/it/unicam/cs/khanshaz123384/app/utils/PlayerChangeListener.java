@@ -22,26 +22,13 @@
  * SOFTWARE.
  */
 
-package it.unicam.cs.khanshaz123384.app;
+package it.unicam.cs.khanshaz123384.app.utils;
 
-import it.unicam.cs.khanshaz123384.api.model.TrackConfiguration;
-import it.unicam.cs.khanshaz123384.api.utils.ColorGenerator;
-import it.unicam.cs.khanshaz123384.api.utils.PlayerParser;
-import it.unicam.cs.khanshaz123384.api.utils.TxtFileReaderService;
-import it.unicam.cs.khanshaz123384.api.utils.TrackConfigurationParser;
-import it.unicam.cs.khanshaz123384.api.utils.IFileReaderService;
+import it.unicam.cs.khanshaz123384.api.model.Interfaces.IPlayer;
 
-import java.io.IOException;
-import java.util.List;
-
-public class ConfigurationLoader {
-    public TrackConfiguration loadConfiguration(String filePath) throws IOException, IllegalArgumentException {
-        IFileReaderService fileReaderService = new TxtFileReaderService();
-        ColorGenerator colorGenerator = new ColorGenerator();
-        PlayerParser playerParser = new PlayerParser(colorGenerator);
-        TrackConfigurationParser parser = new TrackConfigurationParser(playerParser);
-
-        List<String> lines = fileReaderService.readFile(filePath);
-        return parser.parse(lines);
+public class PlayerChangeListener implements IPlayerChangeListener {
+    @Override
+    public void onPlayerChange(IPlayer newPlayer) {
+        System.out.println("Player changed to: " + newPlayer.getName());
     }
 }

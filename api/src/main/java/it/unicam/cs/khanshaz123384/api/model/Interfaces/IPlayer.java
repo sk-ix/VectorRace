@@ -22,17 +22,17 @@
  * SOFTWARE.
  */
 
-package it.unicam.cs.khanshaz123384.app.controller;
+package it.unicam.cs.khanshaz123384.api.model.Interfaces;
 
-import it.unicam.cs.khanshaz123384.api.model.Player;
-import it.unicam.cs.khanshaz123384.app.view.TrackGrid;
-
-import java.util.List;
-
-public interface ITrackManager {
-    void updatePositions();
-    List<Player> getPlayers();
-    TrackGrid getTrackGrid();
-    JoystickEventHandler getJoystickEventHandler();
-    Player getCurrentPlayer();
+public interface IPlayer {
+    String getName();
+    String getColor();
+    int[] getPosition();
+    int[] getVelocity();
+    int[] getPreviousPosition();
+    int getRank();
+    String getType();
+    void setPosition(int newPositionX, int newPositionY);
+    void setVelocity(int newVelocityX, int newVelocityY);
+    void setRank(int newRank);
 }
