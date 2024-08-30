@@ -24,6 +24,25 @@
 
 package it.unicam.cs.khanshaz123384.api.utils.Interfaces;
 
+/**
+ * An interface for generating random colors.
+ * <p>
+ * This interface defines a method for generating a random color, which can be used for various purposes,
+ * such as assigning colors to players in a game. Implementations of this interface should provide a way
+ * to generate color values, typically in a format suitable for graphical representation.
+ * </p>
+ */
 public interface IColorGenerator {
+
+    /**
+     * Generates a random color.
+     * <p>
+     * The generated color should be represented as a string. The specific format of the color string
+     * can vary depending on the implementation, but common formats include hexadecimal color codes
+     * (e.g., "#RRGGBB") or named colors.
+     * </p>
+     *
+     * @return A string representing a randomly generated color.
+     */
     String getRandomColor();
 }

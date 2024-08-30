@@ -30,42 +30,86 @@ import it.unicam.cs.khanshaz123384.app.controller.Interfaces.IRaceSimulator;
 import it.unicam.cs.khanshaz123384.app.controller.Interfaces.ITrackManager;
 import it.unicam.cs.khanshaz123384.app.model.ITrackGrid;
 import it.unicam.cs.khanshaz123384.app.model.TrackGrid;
-import it.unicam.cs.khanshaz123384.app.utils.IPlayerChangeListener;
-import javafx.application.Platform;
 
 import java.util.List;
 
-public class TrackManager implements ITrackManager, IPlayerChangeListener {
+/**
+ * Manages the track grid, player list, and joystick event handling.
+ *
+ * <p>This class implements the {@link ITrackManager} interface and is responsible for
+ * managing the track grid by updating player positions, handling joystick events
+ * and delegating them to the appropriate controller.</p>
+ */
+public class TrackManager implements ITrackManager {
 
     private final ITrackGrid trackGrid;
     private final List<IPlayer> players;
     private final IJoystickEventHandler joystickEventHandler;
 
+    /**
+     * Constructs a TrackManager instance with the specified grid map, players, and race simulator.
+     *
+     * <p>This constructor initializes the track grid and joystick event handler using the provided
+     * grid map, player list, and race simulator.</p>
+     *
+     * @param gridMap The 2D character array representing the track grid.
+     * @param players The list of players participating in the race.
+     * @param raceSimulator The race simulator to handle joystick events.
+     * @throws IllegalArgumentException If any of the parameters are null or invalid.
+     */
     public TrackManager(char[][] gridMap, List<IPlayer> players, IRaceSimulator raceSimulator) {
-        this.players = players;
+        if (gridMap == null)
+            throw new IllegalArgumentException("Grid map cannot be null.");
+
+        if (players == null)
+            throw new IllegalArgumentException("Players list cannot be null.");
+
+        if (raceSimulator == null)
+            throw new IllegalArgumentException("Race simulator cannot be null.");
+
+
+        this.players = List.copyOf(players); // Immutable copy to prevent external modifications
         this.trackGrid = new TrackGrid(gridMap, players);
         this.joystickEventHandler = new JoystickController(raceSimulator);
-        raceSimulator.setPlayerChangeListener(this);
     }
 
+    /**
+     * Returns the list of players managed by this TrackManager.
+     *
+     * @return A list of {@link IPlayer} objects.
+     */
     @Override
     public List<IPlayer> getPlayers() {
         return players;
     }
 
+    /**
+     * Returns the track grid managed by this TrackManager.
+     *
+     * @return An instance of {@link ITrackGrid}.
+     */
     @Override
     public ITrackGrid getTrackGrid() {
         return trackGrid;
     }
 
+    /**
+     * Returns the joystick event handler for handling joystick input.
+     *
+     * @return An instance of {@link IJoystickEventHandler}.
+     */
     @Override
     public IJoystickEventHandler getJoystickEventHandler() {
         return joystickEventHandler;
     }
 
+    /**
+     * Updates the positions of players on the track grid.
+     *
+     * <p>This method delegates the player position update task to the track grid instance.</p>
+     */
     @Override
-    public void onPlayerChange(IPlayer newPlayer) {
-        Platform.runLater(trackGrid::updatePlayerPositions);
+    public void updatePlayerPositions() {
+        trackGrid.updatePlayerPositions();
     }
-
 }

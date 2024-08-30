@@ -26,6 +26,20 @@ package it.unicam.cs.khanshaz123384.app.utils;
 
 import it.unicam.cs.khanshaz123384.api.model.Interfaces.IPlayer;
 
+/**
+ * An interface for listening to player change events.
+ *
+ * <p>This interface provides a callback method that is invoked when a player change event occurs.
+ * Implementations of this interface can handle the change in player information by implementing
+ * the {@link #onPlayerChange(IPlayer)} method.</p>
+ */
 public interface IPlayerChangeListener {
+
+    /**
+     * Called when the player has changed.
+     *
+     * @param newPlayer The new player instance. Must not be {@code null}.
+     * @throws IllegalArgumentException if {@code newPlayer} is {@code null}.
+     */
     void onPlayerChange(IPlayer newPlayer);
 }

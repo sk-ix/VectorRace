@@ -24,8 +24,36 @@
 
 package it.unicam.cs.khanshaz123384.app.model;
 
+/**
+ * An interface for managing and updating the track grid in the simulation.
+ *
+ * <p>This interface defines methods for updating the entire grid as well as updating
+ * the positions of players within the grid. Implementations of this interface should
+ * provide concrete behavior for rendering and managing grid updates.</p>
+ */
 public interface ITrackGrid {
-    void updateGrid();
-    void updatePlayerPositions();
 
+    /**
+     * Updates the entire grid.
+     *
+     * <p>This method is responsible for refreshing or re-rendering the grid. It should
+     * be called whenever there are changes to the grid that need to be reflected in
+     * the visual representation.</p>
+     *
+     * <p>Implementations should ensure that the grid is updated in a way that reflects
+     * any changes in the grid data structure or its visualization.</p>
+     */
+    void updateGrid();
+
+    /**
+     * Updates the positions of players within the grid.
+     *
+     * <p>This method is responsible for refreshing the positions of players on the grid.
+     * It should be called whenever there is a change in player positions that needs to be
+     * reflected visually on the grid.</p>
+     *
+     * <p>Implementations should update the display to show the new positions of the players
+     * and ensure that any changes are accurately reflected.</p>
+     */
+    void updatePlayerPositions();
 }

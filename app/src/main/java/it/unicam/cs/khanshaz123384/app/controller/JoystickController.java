@@ -27,18 +27,53 @@ package it.unicam.cs.khanshaz123384.app.controller;
 import it.unicam.cs.khanshaz123384.app.controller.Interfaces.IJoystickEventHandler;
 import it.unicam.cs.khanshaz123384.app.controller.Interfaces.IRaceSimulator;
 
+/**
+ * Handles joystick events by notifying the race simulator of player inputs.
+ *
+ * <p>This class implements the {@link IJoystickEventHandler} interface and is responsible
+ * for processing joystick input events during a race simulation. It ensures that the race
+ * simulation is running before passing the input to the simulator.</p>
+ */
 public class JoystickController implements IJoystickEventHandler {
 
     private final IRaceSimulator raceSimulator;
 
+    /**
+     * Constructs a JoystickController instance with the specified race simulator.
+     *
+     * <p>This constructor initializes the JoystickController with the race simulator
+     * that will handle the joystick events.</p>
+     *
+     * @param raceSimulator The race simulator to be notified of joystick events.
+     * @throws IllegalArgumentException If {@code raceSimulator} is {@code null}.
+     */
     public JoystickController(IRaceSimulator raceSimulator) {
+        if (raceSimulator == null)
+            throw new IllegalArgumentException("RaceSimulator cannot be null.");
+
         this.raceSimulator = raceSimulator;
     }
 
+    /**
+     * Handles joystick events and notifies the race simulator of player input.
+     *
+     * <p>This method processes the joystick input values and, if the race is currently running,
+     * it forwards these inputs to the race simulator for processing. The input values are expected
+     * to be -1, 0, or 1 for both deltaX and deltaY.</p>
+     *
+     * @param deltaX The change in the X direction as reported by the joystick. Expected to be -1, 0, or 1.
+     * @param deltaY The change in the Y direction as reported by the joystick. Expected to be -1, 0, or 1.
+     * @throws IllegalArgumentException If {@code deltaX} or {@code deltaY} are not -1, 0, or 1.
+     */
     @Override
     public void handleJoystickEvent(int deltaX, int deltaY) {
-        if (raceSimulator.isRaceRunning()) {
+        // Validate that deltaX and deltaY are within the acceptable range
+        if (deltaX < -1 || deltaX > 1 || deltaY < -1 || deltaY > 1)
+            throw new IllegalArgumentException("Delta values must be -1, 0, or 1.");
+
+        // Check if the race is currently running
+        if (raceSimulator.isRaceRunning())
+            // Notify the race simulator of the joystick input
             raceSimulator.notifyPlayerInput(deltaX, deltaY);
-        }
     }
 }

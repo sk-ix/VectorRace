@@ -26,6 +26,26 @@ package it.unicam.cs.khanshaz123384.app.controller.Interfaces;
 
 import it.unicam.cs.khanshaz123384.api.model.Interfaces.IPlayer;
 
+/**
+ * Interface for checking the position of a player in the game.
+ *
+ * <p>This interface defines a method for validating or verifying the position of a player
+ * on the game grid. The implementation of this interface is responsible for ensuring that
+ * the player's current position is valid according to the game's rules and constraints.</p>
+ */
 public interface IPositionChecker {
+
+    /**
+     * Checks the position of the specified player.
+     *
+     * <p>This method validates the current position of the given player on the game grid.
+     * It ensures that the player’s position adheres to the game's rules, such as checking
+     * for collisions, boundaries, or other position-related constraints. The implementation
+     * should handle any necessary checks and take appropriate actions based on the result.</p>
+     *
+     * @param player The player whose position is to be checked.
+     *               This parameter must not be {@code null}.
+     * @throws IllegalArgumentException if the player is {@code null}.
+     */
     void checkPosition(IPlayer player);
 }

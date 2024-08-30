@@ -28,6 +28,31 @@ import it.unicam.cs.khanshaz123384.api.model.Interfaces.IPlayer;
 
 import java.util.List;
 
+
+/**
+ * An interface for parsing player information from a list of strings.
+ * <p>
+ * This interface defines a method for converting a list of string representations of player data
+ * into a list of {@link IPlayer} objects. Implementations of this interface are expected to
+ * handle the specific format of player data and create corresponding player instances.
+ * </p>
+ */
 public interface IPlayerParser {
+
+    /**
+     * Parses a list of strings representing player data and converts them into a list of {@link IPlayer} instances.
+     * <p>
+     * Each string in the input list represents information about a player. The format and content of these
+     * strings are defined by the specific implementation of the parser. This method should handle any required
+     * parsing logic to extract player details and create {@link IPlayer} objects accordingly.
+     * </p>
+     *
+     * @param playerLines A list of strings, where each string contains data about a player.
+     *                    The format of these strings must be defined and handled by the implementation.
+     * @return A list of {@link IPlayer} objects created based on the provided player data.
+     *         The returned list should contain one player object for each input string.
+     * @throws IllegalArgumentException if any of the input strings are invalid or cannot be parsed
+     *                                  into a player object.
+     */
     List<IPlayer> parsePlayers(List<String> playerLines);
 }

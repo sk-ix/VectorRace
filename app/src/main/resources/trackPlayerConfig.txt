@@ -40,4 +40,4 @@
 Right
 
 Trudy, Human
-Alice, Bot
+Alice, Human

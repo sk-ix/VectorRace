@@ -31,7 +31,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a track configuration for a game, including the grid layout, players, and movement direction.
+ * Represents a configuration for a game track, including the grid layout, list of players, and movement direction.
+ * <p>
+ * This class implements the {@link ITrackConfiguration} interface and provides methods to access the grid, check
+ * position validity, and retrieve start and finish positions on the track.
+ * </p>
  */
 public record TrackConfiguration
         (char[][] grid, List<IPlayer> players, String direction)
@@ -51,17 +55,16 @@ public record TrackConfiguration
      */
     public TrackConfiguration {
         if (grid == null || players == null)
-            throw new IllegalArgumentException("Grid and players list cannot be null");
+            throw new IllegalArgumentException("Grid and players list cannot be null.");
 
         if (grid.length == 0 || players.isEmpty())
-            throw new IllegalArgumentException("Grid and players list cannot be empty");
+            throw new IllegalArgumentException("Grid and players list cannot be empty.");
 
         if (grid.length != GRID_ROWS || grid[0].length != GRID_COLS)
-            throw new IllegalArgumentException("Grid dimensions must be " + GRID_ROWS + "x" + GRID_COLS);
+            throw new IllegalArgumentException("Grid dimensions must be " + GRID_ROWS + "x" + GRID_COLS + ".");
 
         if (direction == null || (!direction.equals("right") && !direction.equals("left")))
-            throw new IllegalArgumentException("Direction must be 'right' or 'left'");
-
+            throw new IllegalArgumentException("Direction must be 'right' or 'left'.");
     }
 
     /**
@@ -69,20 +72,27 @@ public record TrackConfiguration
      *
      * @return The list of players.
      */
-    public List<IPlayer> getPlayers() {return players;}
+    @Override
+    public List<IPlayer> getPlayers() {
+        return players;
+    }
 
     /**
      * Returns the grid layout of the track.
      *
      * @return The 2D array representing the grid.
      */
-    public char[][] getGrid() {return grid;}
+    @Override
+    public char[][] getGrid() {
+        return grid;
+    }
 
     /**
      * Checks if a position is within the bounds of the grid.
-     *
+     * <p>
      * This method verifies that the provided coordinates are within the valid range
-     * of the grid dimensions. It throws an exception if the grid is not initialized.
+     * of the grid dimensions. If the grid is not initialized, an exception is thrown.
+     * </p>
      *
      * @param x The x-coordinate of the position.
      * @param y The y-coordinate of the position.
@@ -90,69 +100,102 @@ public record TrackConfiguration
      *         {@code false} otherwise.
      * @throws IllegalStateException if the grid is not initialized.
      */
+    @Override
     public boolean isPositionWithinBounds(int x, int y) {
-        // Validate that the grid is initialized
         if (grid == null)
             throw new IllegalStateException("Grid is not initialized.");
 
+        // Return true if the x and y coordinates are within the grid dimensions.
         return x >= 0 && x < GRID_COLS && y >= 0 && y < GRID_ROWS;
     }
 
     /**
      * Checks if a position is blocked by an obstacle ('#').
-     *
-     * This method first checks if the provided coordinates are within the bounds
+     * <p>
+     * This method first verifies if the provided coordinates are within the bounds
      * of the grid. If the position is out of bounds, it returns {@code false} as
      * out-of-bounds positions cannot be blocked. If the position is within bounds,
      * it then checks if the grid cell at that position contains an obstacle ('#').
+     * </p>
      *
      * @param x The x-coordinate of the position.
      * @param y The y-coordinate of the position.
      * @return {@code true} if the position is within bounds and blocked by an obstacle;
-     *         {@code false} otherwise, including out-of-bounds positions.
+     *         {@code false} otherwise.
+     * @throws  IndexOutOfBoundsException if the position is out of bounds
      * @throws IllegalStateException if the grid is not initialized.
      */
-
+    @Override
     public boolean isPositionBlocked(int x, int y) {
-        // Validate that the grid is initialized
         if (grid == null)
             throw new IllegalStateException("Grid is not initialized.");
 
-
-        // First, check if the position is within bounds
+        // First check if the position is within bounds; if not, return false.
         if (!isPositionWithinBounds(x, y))
-            return false; // Out-of-bounds positions cannot be blocked
+            throw new IndexOutOfBoundsException("Position is out of bounds.");
 
-
-        // Check if the position is blocked by an obstacle
+        // Return true if the specified grid cell contains an obstacle ('#').
         return grid[y][x] == '#';
     }
 
     /**
-     * Retrieves the list of finish positions on the grid.
+     * Retrieves the list of start positions on the grid.
+     * <p>
+     * This method scans the grid for cells marked as 'S' and collects their coordinates
+     * into a list. If no start positions are found, an {@code IllegalStateException} is thrown.
+     * </p>
      *
-     * This method checks if the grid is initialized. If the grid is not initialized,
-     * it throws an {@code IllegalStateException}. It then scans the grid for cells
-     * marked as 'F' and collects their coordinates into a list. If no finish positions
-     * are found, an {@code IllegalStateException} is thrown.
+     * @return A list of coordinate pairs representing start positions.
+     * @throws IllegalStateException if the grid is not initialized or if no start positions are found.
+     */
+    @Override
+    public List<int[]> getStartPositions() {
+        if (grid == null)
+            throw new IllegalStateException("Grid is not initialized.");
+
+        // Initialize a list to store the start positions.
+        List<int[]> startPositions = new ArrayList<>();
+
+        // Iterate through the grid to find cells marked with 'S'.
+        for (int y = 0; y < GRID_ROWS; y++) {
+            for (int x = 0; x < GRID_COLS; x++) {
+                if (grid[y][x] == 'S')
+                    startPositions.add(new int[]{x, y});
+            }
+        }
+
+        if (startPositions.isEmpty())
+            throw new IllegalStateException("No start positions 'S' found on the grid.");
+
+        return startPositions;
+    }
+
+    /**
+     * Retrieves the list of finish positions on the grid.
+     * <p>
+     * This method scans the grid for cells marked as 'F' and collects their coordinates
+     * into a list. If no finish positions are found, an {@code IllegalStateException} is thrown.
+     * </p>
      *
      * @return A list of coordinate pairs representing finish positions.
      * @throws IllegalStateException if the grid is not initialized or if no finish positions are found.
      */
+    @Override
     public List<int[]> getFinishPositions() {
-        // Check if the grid is initialized
         if (grid == null)
             throw new IllegalStateException("Grid is not initialized.");
 
-
+        // Initialize a list to store the finish positions.
         List<int[]> finishPositions = new ArrayList<>();
+
+        // Iterate through the grid to find cells marked with 'F'.
         for (int y = 0; y < GRID_ROWS; y++) {
             for (int x = 0; x < GRID_COLS; x++) {
                 if (grid[y][x] == 'F')
                     finishPositions.add(new int[]{x, y});
-
             }
         }
+
         if (finishPositions.isEmpty())
             throw new IllegalStateException("No finish positions 'F' found on the grid.");
 
@@ -160,33 +203,14 @@ public record TrackConfiguration
     }
 
     /**
-     * Retrieves the list of start positions on the grid.
+     * Retrieves the direction of movement for the track.
+     * <p>
+     * This method returns the direction in which the track is oriented, typically
+     * either "right" or "left". This direction affects how movement and crossing
+     * of finish lines are interpreted.
+     * </p>
      *
-     * This method checks if the grid is initialized. If the grid is not initialized,
-     * it throws an {@code IllegalStateException}. It then scans the grid for cells
-     * marked as 'S' and collects their coordinates into a list. If no start positions
-     * are found, an {@code IllegalStateException} is thrown.
-     *
-     * @return A list of coordinate pairs representing start positions.
-     * @throws IllegalStateException if the grid is not initialized or if no start positions are found.
+     * @return A {@code String} representing the direction of movement ("right" or "left").
      */
-    public List<int[]> getStartPositions() {
-        // Check if the grid is initialized
-        if (grid == null)
-            throw new IllegalStateException("Grid is not initialized.");
-
-
-        List<int[]> startPositions = new ArrayList<>();
-        for (int y = 0; y < GRID_ROWS; y++) {
-            for (int x = 0; x < GRID_COLS; x++) {
-                if (grid[y][x] == 'S')
-                    startPositions.add(new int[]{x, y});
-
-            }
-        }
-        if (startPositions.isEmpty())
-            throw new IllegalStateException("No start positions 'S' found on the grid.");
-
-        return startPositions;
-    }
+    public String getDirection() { return direction;}
 }

@@ -29,8 +29,40 @@ import it.unicam.cs.khanshaz123384.app.model.ITrackGrid;
 
 import java.util.List;
 
+/**
+ * Interface representing the management of the track and players in the simulation.
+ *
+ * <p>This interface provides methods for accessing player information, the track grid,
+ * handling joystick events, and updating player positions.</p>
+ */
 public interface ITrackManager {
+
+    /**
+     * Retrieves the list of players currently on the track.
+     *
+     * @return A list of {@link IPlayer} objects representing the players.
+     */
     List<IPlayer> getPlayers();
+
+    /**
+     * Retrieves the track grid that displays the layout of the track.
+     *
+     * @return An instance of {@link ITrackGrid} representing the track layout.
+     */
     ITrackGrid getTrackGrid();
+
+    /**
+     * Retrieves the joystick event handler that manages joystick input.
+     *
+     * @return An instance of {@link IJoystickEventHandler} that handles joystick events.
+     */
     IJoystickEventHandler getJoystickEventHandler();
+
+    /**
+     * Updates the positions of players on the track.
+     *
+     * <p>This method ensures that player positions are synchronized with their current
+     * state and are reflected on the track grid.</p>
+     */
+    void updatePlayerPositions();
 }

@@ -35,33 +35,73 @@ import javafx.scene.paint.Color;
 
 import java.util.List;
 
+/**
+ * A {@code VBox} that displays a list of players with their names and colors.
+ *
+ * <p>This class extends {@link VBox} to create a vertical layout that contains a list of
+ * {@link IPlayer} objects. Each player is represented by a {@link Circle} indicating their
+ * color and a {@link Label} displaying their name.</p>
+ */
 public class PlayerView extends VBox {
 
+    /**
+     * Constructs a {@code PlayerView} with the specified list of players.
+     *
+     * @param players The list of players to be displayed in this view.
+     * @throws IllegalArgumentException if {@code players} is null.
+     */
     public PlayerView(List<IPlayer> players) {
+        if (players == null)
+            throw new IllegalArgumentException("Players list cannot be null.");
+
+
+        // Configure the VBox
         setPrefWidth(200);
         setSpacing(10);
         setStyle("-fx-background-color: lightblue; -fx-border-color: black; -fx-border-width: 2px;");
         getChildren().add(createTitleLabel());
 
-        for (IPlayer player : players) {
+        // Add player information to the VBox
+        for (IPlayer player : players)
             getChildren().add(createPlayerHBox(player));
-        }
+
         setAlignment(Pos.CENTER);
     }
 
+    /**
+     * Creates a title label for the player list.
+     *
+     * @return A {@code Label} with the title "Player List".
+     */
     private Label createTitleLabel() {
         Label titleLabel = new Label("Player List");
         titleLabel.setStyle("-fx-font-size: 16; -fx-font-weight: bold;");
         return titleLabel;
     }
 
+    /**
+     * Creates an {@code HBox} containing the visual representation of a player.
+     *
+     * <p>The {@code HBox} includes a {@code Circle} for the player's color and a {@code Label}
+     * for the player's name.</p>
+     *
+     * @param player The player to be displayed in the {@code HBox}.
+     * @return An {@code HBox} containing the player's color and name.
+     * @throws IllegalArgumentException if {@code player} is null.
+     */
     private HBox createPlayerHBox(IPlayer player) {
+        if (player == null)
+            throw new IllegalArgumentException("Player cannot be null.");
+
+        // Create a circle to display the player's color
         Circle colorCircle = new Circle(8);
         colorCircle.setFill(Color.web(player.getColor()));
 
+        // Create a label to display the player's name
         Label playerLabel = new Label(player.getName());
         playerLabel.setStyle("-fx-font-size: 14;");
 
+        // Create an HBox to hold the color circle and player label
         HBox playerHBox = new HBox(5);
         playerHBox.setAlignment(Pos.CENTER);
         playerHBox.getChildren().addAll(colorCircle, playerLabel);

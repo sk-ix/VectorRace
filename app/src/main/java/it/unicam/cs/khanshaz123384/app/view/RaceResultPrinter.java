@@ -22,24 +22,51 @@
  * SOFTWARE.
  */
 
-package it.unicam.cs.khanshaz123384.app.controller;
+package it.unicam.cs.khanshaz123384.app.view;
 
 import it.unicam.cs.khanshaz123384.api.model.Interfaces.IPlayer;
 import it.unicam.cs.khanshaz123384.app.controller.Interfaces.IRaceResultPrinter;
 import it.unicam.cs.khanshaz123384.app.controller.Interfaces.IPlayerManager;
 
+/**
+ * Prints the final rankings of players after the race has concluded.
+ *
+ * <p>This class implements the {@link IRaceResultPrinter} interface and is responsible
+ * for displaying the results of the race, specifically the final rankings of the players.</p>
+ */
 public class RaceResultPrinter implements IRaceResultPrinter {
+
     private final IPlayerManager playerManager;
 
+    /**
+     * Constructs a RaceResultPrinter instance with the specified player manager.
+     *
+     * <p>This constructor initializes the RaceResultPrinter with the player manager,
+     * which provides access to the list of finished players and their rankings.</p>
+     *
+     * @param playerManager The manager that handles player information and rankings.
+     * @throws IllegalArgumentException If playerManager is null.
+     */
     public RaceResultPrinter(IPlayerManager playerManager) {
+        if (playerManager == null)
+            throw new IllegalArgumentException("PlayerManager cannot be null.");
+
         this.playerManager = playerManager;
     }
 
+    /**
+     * Prints the final rankings of players to the console.
+     *
+     * <p>This method retrieves the list of finished players from the player manager and
+     * prints their rankings in the format: rank. playerName.</p>
+     */
     @Override
     public void printRankings() {
         System.out.println("Final Rankings:");
+        // Retrieve the list of finished players from the player manager
         for (IPlayer player : playerManager.getFinishedPlayers()) {
-            System.out.println((player.getRank()) + ". " + player.getName());
+            // Print each player's rank and name
+            System.out.println(player.getRank() + ". " + player.getName());
         }
     }
 }

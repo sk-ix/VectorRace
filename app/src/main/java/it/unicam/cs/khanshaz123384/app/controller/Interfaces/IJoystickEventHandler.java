@@ -24,6 +24,25 @@
 
 package it.unicam.cs.khanshaz123384.app.controller.Interfaces;
 
+/**
+ * Interface for handling joystick events in the application.
+ *
+ * <p>This interface defines a method for processing joystick input events that
+ * affect the state or behavior of game elements. Implementations of this interface
+ * handle the changes in joystick input and apply the corresponding actions.</p>
+ */
 public interface IJoystickEventHandler {
+
+    /**
+     * Handles the joystick event by processing the changes in the x and y coordinates.
+     *
+     * <p>This method is called when joystick input is detected, and it should update
+     * the relevant game state based on the provided changes in the x and y directions.</p>
+     *
+     * @param deltaX The change in the x-coordinate due to joystick input.
+     * @param deltaY The change in the y-coordinate due to joystick input.
+     * @throws IllegalArgumentException If {@code deltaX} or {@code deltaY} are not within
+     *                                  the acceptable range of -1, 0, or 1.
+     */
     void handleJoystickEvent(int deltaX, int deltaY);
 }

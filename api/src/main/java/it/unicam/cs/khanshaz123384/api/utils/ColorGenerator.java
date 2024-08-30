@@ -31,25 +31,42 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Implementation of the {@link IColorGenerator} interface that provides color generation services.
+ *
+ * <p>This class maintains a list of predefined colors and provides a method to retrieve a random color.
+ * Each color is removed from the list after being selected to ensure it is only assigned once.</p>
+ */
 public class ColorGenerator implements IColorGenerator {
+
+    // Predefined list of colors
     private static final List<String> AVAILABLE_COLORS = Arrays.asList(
             "Red", "Blue", "Green", "Yellow", "Orange", "Purple", "Pink", "Brown"
     );
 
     private final List<String> availableColors;
 
+    /**
+     * Constructs a {@code ColorGenerator} instance with the default list of colors.
+     */
+    public ColorGenerator() {availableColors = new ArrayList<>(AVAILABLE_COLORS);}
 
-    public ColorGenerator() {
-        availableColors = new ArrayList<>(AVAILABLE_COLORS);
-    }
-
+    /**
+     * Retrieves a random color from the available colors and removes it from the list.
+     *
+     * <p>This method ensures that each color is assigned only once by removing it from the list
+     * after it has been selected. If all colors have been used, it throws an exception.</p>
+     *
+     * @return A randomly selected color.
+     * @throws IllegalStateException if no colors are available to choose from.
+     */
+    @Override
     public String getRandomColor() {
-        if (availableColors.isEmpty()) {
+        if (availableColors.isEmpty())
             throw new IllegalStateException("No colors available");
-        }
+
         Random random = new Random();
         int index = random.nextInt(availableColors.size());
         return availableColors.remove(index);
     }
-
 }

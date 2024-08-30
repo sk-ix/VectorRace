@@ -28,40 +28,93 @@ import it.unicam.cs.khanshaz123384.api.model.BotPlayer;
 import it.unicam.cs.khanshaz123384.api.model.Interfaces.IPlayer;
 import it.unicam.cs.khanshaz123384.app.controller.Interfaces.IPlayerActionHandler;
 import it.unicam.cs.khanshaz123384.app.controller.Interfaces.IPlayerManager;
-import it.unicam.cs.khanshaz123384.app.utils.IPlayerChangeListener;
 
+/**
+ * Handles player actions during the race simulation, including processing player moves.
+ *
+ * <p>This class implements the {@link IPlayerActionHandler} interface and manages actions
+ * for both human and bot players. It processes player input and updates player positions
+ * accordingly.</p>
+ */
 public class PlayerActionHandler implements IPlayerActionHandler {
     private final IPlayerManager playerManager;
-    private final IPlayerChangeListener playerChangeListener;
 
-    public PlayerActionHandler(IPlayerManager playerManager, IPlayerChangeListener playerChangeListener) {
+    /**
+     * Constructs a PlayerActionHandler instance with the specified player manager.
+     *
+     * <p>This constructor initializes the handler with a player manager to update player positions.</p>
+     *
+     * @param playerManager The manager responsible for player operations.
+     * @throws IllegalArgumentException If {@code playerManager} is {@code null}.
+     */
+    public PlayerActionHandler(IPlayerManager playerManager) {
+        if (playerManager == null)
+            throw new IllegalArgumentException("PlayerManager cannot be null.");
+
         this.playerManager = playerManager;
-        this.playerChangeListener = playerChangeListener;
     }
 
+    /**
+     * Processes actions for the specified player based on their type.
+     *
+     * <p>If the player is human, it waits for player input. If the player is a bot, it retrieves
+     * the next move from the bot and updates the player's position accordingly.</p>
+     *
+     * @param player The player whose action is to be processed.
+     * @throws IllegalArgumentException If {@code player} is {@code null}.
+     */
     @Override
     public void processPlayer(IPlayer player) {
-        if ("Human".equals(player.getType())) {
+        if (player == null)
+            throw new IllegalArgumentException("Player cannot be null.");
+
+
+        if ("Human".equals(player.getType()))
             waitForPlayerInput();
-        } else if ("Bot".equals(player.getType())) {
-            BotPlayer botPlayer = (BotPlayer) player;
-            int[] move = botPlayer.getNextMove();
-            notifyPlayerInput(player, move[0], move[1]);
-        }
+        else if ("Bot".equals(player.getType())) {
+            if (player instanceof BotPlayer botPlayer) {
+                int[] move = botPlayer.getNextMove();
+                notifyPlayerInput(player, move[0], move[1]);
+            } else
+                throw new IllegalArgumentException("Expected instance of BotPlayer.");
+
+        } else
+            throw new IllegalArgumentException("Unknown player type: " + player.getType());
+
     }
 
+    /**
+     * Waits for player input in a synchronized manner.
+     *
+     * <p>This method pauses the thread until a player input is received or notified.</p>
+     */
     private synchronized void waitForPlayerInput() {
         try {
             this.wait();
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+            Thread.currentThread().interrupt(); // Preserve interrupt status
         }
     }
 
+    /**
+     * Notifies the handler of player input changes and updates the player position.
+     *
+     * <p>This method updates the player’s position based on the provided deltas and
+     * notifies any waiting threads that the input has been processed.</p>
+     *
+     * @param player The player whose position is to be updated.
+     * @param deltaX The change in the X direction.
+     * @param deltaY The change in the Y direction.
+     * @throws IllegalArgumentException If {@code player} is {@code null} or if {@code deltaX} or {@code deltaY} are not -1, 0, or 1.
+     */
     public synchronized void notifyPlayerInput(IPlayer player, int deltaX, int deltaY) {
-        if (playerManager != null) {
-            playerManager.updatePlayerPosition(player, deltaX, deltaY);
-            this.notify();
-        }
+        if (player == null)
+            throw new IllegalArgumentException("Player cannot be null.");
+
+        if ((deltaX < -1 || deltaX > 1) || (deltaY < -1 || deltaY > 1))
+            throw new IllegalArgumentException("Delta values must be -1, 0, or 1.");
+
+        playerManager.updatePlayerPosition(player, deltaX, deltaY);
+        this.notify(); // Notify any threads waiting for player input
     }
 }

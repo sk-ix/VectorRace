@@ -24,6 +24,21 @@
 
 package it.unicam.cs.khanshaz123384.app.controller.Interfaces;
 
+
+/**
+ * Interface for printing race results.
+ *
+ * <p>This interface defines a method for printing the rankings of the race participants
+ * after the race simulation has completed.</p>
+ */
 public interface IRaceResultPrinter {
+
+    /**
+     * Prints the rankings of the race participants.
+     *
+     * <p>This method is responsible for outputting the final standings of all participants
+     * in the race, typically after the race simulation has finished. The implementation
+     * may format and display the rankings in a way suitable for the application's user interface.</p>
+     */
     void printRankings();
 }

@@ -26,12 +26,45 @@ package it.unicam.cs.khanshaz123384.api.model;
 
 import it.unicam.cs.khanshaz123384.api.utils.Interfaces.IColorGenerator;
 
+/**
+ * Represents a human player in the game.
+ * <p>
+ * This class extends the {@link Player} class, adding specific details or behaviors
+ * relevant to a human-controlled player. It utilizes attributes such as the player's name,
+ * current position, velocity, color, and rank, which are inherited from the {@code Player} class.
+ * </p>
+ */
 public class HumanPlayer extends Player {
 
+    /**
+     * Constructs a {@code HumanPlayer} with the specified attributes.
+     * <p>
+     * This constructor initializes a human player with a name, position, velocity, color, and rank.
+     * The color is generated using an instance of {@link IColorGenerator}, and the attributes are passed
+     * to the superclass constructor for initialization.
+     * </p>
+     *
+     * @param playerName      The name of the player.
+     * @param currentPosition The initial position of the player on the grid, represented as an array [x, y].
+     * @param currentVelocity The initial velocity of the player, represented as an array [vx, vy].
+     * @param colorGenerator  An instance of {@link IColorGenerator} used to assign a color to the player.
+     * @param rank            The rank of the player, indicating their position in the game's leaderboard or standings.
+     * @throws IllegalArgumentException if any of the parameters are null, or if the position and velocity arrays
+     *                                  do not contain exactly two elements.
+     */
     public HumanPlayer(String playerName, int[] currentPosition, int[] currentVelocity, IColorGenerator colorGenerator, int rank) {
         super(playerName, currentPosition, currentVelocity, colorGenerator, rank);
     }
 
+    /**
+     * Returns the type of player, which is "Human" for instances of this class.
+     * <p>
+     * This method overrides the abstract {@link Player#getType()} method to return a specific type
+     * that identifies this player as a human player.
+     * </p>
+     *
+     * @return A string representing the player type, specifically "Human".
+     */
     @Override
     public String getType() {
         return "Human";

@@ -33,14 +33,32 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 
+/**
+ * A {@code VBox} that provides a joystick control interface for player movement.
+ *
+ * <p>This class extends {@link VBox} to create a vertical layout that contains a set of buttons
+ * arranged in a grid, simulating joystick directions. The buttons allow users to control the player
+ * using the {@link IJoystickEventHandler} provided.</p>
+ */
 public class JoystickView extends VBox {
 
     private final IJoystickEventHandler joystickEventHandler;
 
+    /**
+     * Constructs a {@code JoystickView} with the specified joystick event handler.
+     *
+     * @param joystickEventHandler The handler for joystick events, used to process button presses.
+     * @throws IllegalArgumentException if {@code joystickEventHandler} is null.
+     */
     public JoystickView(IJoystickEventHandler joystickEventHandler) {
+        if (joystickEventHandler == null)
+            throw new IllegalArgumentException("JoystickEventHandler cannot be null.");
+
+
         this.joystickEventHandler = joystickEventHandler;
         setSpacing(10);
-        setStyle("-fx-background-color: lightblue; -fx-border-color: black; -fx-border-width: 2px;");        setPadding(new Insets(10));
+        setStyle("-fx-background-color: lightblue; -fx-border-color: black; -fx-border-width: 2px;");
+        setPadding(new Insets(10));
         setAlignment(Pos.CENTER);
 
         getChildren().addAll(
@@ -49,6 +67,11 @@ public class JoystickView extends VBox {
         );
     }
 
+    /**
+     * Creates a label providing instructions for joystick control.
+     *
+     * @return A {@code Label} with instructions for using the joystick.
+     */
     private Label createInstructionLabel() {
         Label instructionLabel = new Label("Joystick to control the player");
         instructionLabel.setTextAlignment(TextAlignment.CENTER);
@@ -57,12 +80,18 @@ public class JoystickView extends VBox {
         return instructionLabel;
     }
 
+    /**
+     * Creates a {@code GridPane} layout with buttons simulating joystick directions.
+     *
+     * @return A {@code GridPane} containing directional buttons.
+     */
     private GridPane createJoystickGrid() {
         GridPane grid = new GridPane();
         grid.setHgap(5);
         grid.setVgap(5);
         grid.setAlignment(Pos.CENTER);
 
+        // Create and add buttons for joystick directions
         Button upLeftButton = createButton("↖", -1, -1);
         Button upButton = createButton("↑", 0, -1);
         Button upRightButton = createButton("↗", 1, -1);
@@ -86,18 +115,30 @@ public class JoystickView extends VBox {
         return grid;
     }
 
+    /**
+     * Creates a {@code Button} with the specified text and joystick delta values.
+     *
+     * @param text   The text to display on the button.
+     * @param deltaX The horizontal movement delta associated with the button.
+     * @param deltaY The vertical movement delta associated with the button.
+     * @return A {@code Button} configured with the given text and event handling.
+     */
     private Button createButton(String text, int deltaX, int deltaY) {
+
+        if (text == null || text.isEmpty())
+            throw new IllegalArgumentException("Button text cannot be null or empty.");
+
         Button button = new Button(text);
         button.setPrefSize(50, 50);
         button.setStyle("-fx-background-color: lightblue; -fx-border-color: black; -fx-border-width: 1px; -fx-font-size: 20;");
         button.setTextAlignment(TextAlignment.CENTER);
 
         button.setOnAction(event -> {
-            if (joystickEventHandler != null) {
+            if (joystickEventHandler != null)
                 joystickEventHandler.handleJoystickEvent(deltaX, deltaY);
-            } else {
+            else
                 System.err.println("JoystickEventHandler not set or no players available.");
-            }
+
         });
 
         return button;

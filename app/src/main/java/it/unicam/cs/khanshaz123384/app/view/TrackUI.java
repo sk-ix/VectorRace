@@ -35,35 +35,69 @@ import javafx.stage.Stage;
 import javafx.scene.layout.Priority;
 import javafx.scene.control.ScrollPane;
 
+/**
+ * User Interface class for displaying the track grid and player controls.
+ *
+ * <p>This class extends {@link Application} and sets up the main UI components
+ * for the race simulation, including a scrollable view of the track grid, a player
+ * view, and a joystick view for controlling the players.</p>
+ */
 public class TrackUI extends Application {
 
     private final ITrackManager trackManager;
 
+    /**
+     * Constructs a {@code TrackUI} with the specified track manager.
+     *
+     * @param trackManager The track manager to be used for managing the track grid and player data.
+     * @throws IllegalArgumentException if {@code trackManager} is null.
+     */
     public TrackUI(ITrackManager trackManager) {
+        if (trackManager == null)
+            throw new IllegalArgumentException("TrackManager cannot be null.");
+
         this.trackManager = trackManager;
     }
 
+    /**
+     * Starts the JavaFX application and sets up the user interface.
+     *
+     * <p>This method is called after the application is initialized. It sets up
+     * the main layout of the application, including the track grid, player view,
+     * and joystick controls.</p>
+     *
+     * @param primaryStage The primary stage for this application, onto which the
+     *                     application scene will be set.
+     */
     @Override
     public void start(Stage primaryStage) {
+        // Set the title of the primary stage
         primaryStage.setTitle("Track Grid");
 
+        // Create the main layout container
         BorderPane borderPane = new BorderPane();
+
+        // Create views for players and joystick, and get the track grid
         PlayerView playerView = new PlayerView(trackManager.getPlayers());
         JoystickView joystickView = new JoystickView(trackManager.getJoystickEventHandler());
         ITrackGrid trackGrid = trackManager.getTrackGrid();
 
+        // Create a scroll pane for the track grid
         ScrollPane scrollPane = new ScrollPane((Node) trackGrid);
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(true);
 
+        // Create a left pane with player and joystick views
         VBox leftPane = new VBox(playerView, joystickView);
         leftPane.setStyle("-fx-border-color: black; -fx-border-width: 2px;");
         VBox.setVgrow(playerView, Priority.ALWAYS);
         VBox.setVgrow(joystickView, Priority.ALWAYS);
 
+        // Add components to the main layout
         borderPane.setLeft(leftPane);
         borderPane.setCenter(scrollPane);
 
+        // Create and set the scene for the primary stage
         Scene scene = new Scene(borderPane, 1200, 600);
         primaryStage.setScene(scene);
         primaryStage.show();

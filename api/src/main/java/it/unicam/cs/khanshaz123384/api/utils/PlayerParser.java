@@ -33,25 +33,54 @@ import it.unicam.cs.khanshaz123384.api.utils.Interfaces.IPlayerParser;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Parses player configurations from a list of strings.
+ *
+ * <p>This class implements the {@link IPlayerParser} interface to convert a list of player configuration
+ * lines into a list of {@link IPlayer} objects. It validates each player line and constructs the appropriate
+ * player objects based on the type specified.</p>
+ */
 public class PlayerParser implements IPlayerParser {
 
     private final IColorGenerator colorGenerator;
 
+    /**
+     * Constructs a {@code PlayerParser} with the specified color generator.
+     *
+     * @param colorGenerator The generator used to create colors for players.
+     * @throws IllegalArgumentException if {@code colorGenerator} is null.
+     */
     public PlayerParser(IColorGenerator colorGenerator) {
+        if (colorGenerator == null)
+            throw new IllegalArgumentException("Color generator cannot be null.");
+
         this.colorGenerator = colorGenerator;
     }
 
+    /**
+     * Parses a list of player configuration lines into a list of {@link IPlayer} objects.
+     *
+     * <p>This method processes each line to create {@link HumanPlayer} or {@link BotPlayer} instances based
+     * on the type specified in the line. Lines are expected to be in the format: "name, type", where type is
+     * either "human" or "bot".</p>
+     *
+     * @param playerLines A list of strings, each representing a player configuration.
+     * @return A list of {@link IPlayer} objects created from the provided lines.
+     * @throws IllegalStateException if {@code playerLines} is null or empty.
+     * @throws IllegalArgumentException if a line is invalid or the player type is unknown.
+     */
+    @Override
     public List<IPlayer> parsePlayers(List<String> playerLines) {
-        if (playerLines == null || playerLines.isEmpty()) {
+        if (playerLines == null || playerLines.isEmpty())
             throw new IllegalStateException("Player lines cannot be null or empty.");
-        }
+
 
         List<IPlayer> players = new ArrayList<>();
 
         for (String line : playerLines) {
-            if (!validatePlayerLine(line)) {
+            if (!validatePlayerLine(line))
                 throw new IllegalArgumentException("Invalid player line format: " + line);
-            }
+
 
             String[] parts = line.split(",\\s*");
             String playerName = parts[0].trim();
@@ -72,10 +101,19 @@ public class PlayerParser implements IPlayerParser {
         return players;
     }
 
+    /**
+     * Validates the format of a player configuration line.
+     *
+     * <p>The method checks if the line contains exactly two parts separated by a comma and if the second part
+     * is either "human" or "bot".</p>
+     *
+     * @param line The player configuration line to be validated.
+     * @return {@code true} if the line is valid; {@code false} otherwise.
+     * @throws IllegalStateException if {@code line} is null.
+     */
     private boolean validatePlayerLine(String line) {
-        if (line == null) {
+        if (line == null)
             throw new IllegalStateException("Line cannot be null.");
-        }
 
         String[] parts = line.split(",\\s*");
         return parts.length == 2 && ("human".equalsIgnoreCase(parts[1].trim()) || "bot".equalsIgnoreCase(parts[1].trim()));
