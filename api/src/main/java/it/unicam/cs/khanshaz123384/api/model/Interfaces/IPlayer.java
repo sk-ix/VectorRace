@@ -118,7 +118,6 @@ public interface IPlayer {
      *
      * @param newVelocityX The new x-component of the player's velocity.
      * @param newVelocityY The new y-component of the player's velocity.
-     * @throws IllegalArgumentException If either of the new velocity is negative.
      */
     void setVelocity(int newVelocityX, int newVelocityY);
 

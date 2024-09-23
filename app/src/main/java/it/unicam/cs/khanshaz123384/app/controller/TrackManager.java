@@ -68,7 +68,7 @@ public class TrackManager implements ITrackManager {
             throw new IllegalArgumentException("Race simulator cannot be null.");
 
 
-        this.players = List.copyOf(players); // Immutable copy to prevent external modifications
+        this.players = List.copyOf(players);
         this.trackGrid = new TrackGrid(gridMap, players);
         this.joystickEventHandler = new JoystickController(raceSimulator);
     }

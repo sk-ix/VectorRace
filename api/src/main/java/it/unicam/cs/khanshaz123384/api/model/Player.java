@@ -170,7 +170,6 @@ public abstract class Player implements IPlayer {
         if (newPositionX < 0 || newPositionY < 0)
             throw new IllegalArgumentException("Coordinates cannot be negative.");
 
-
         this.previousPosition = this.currentPosition.clone();
         this.currentPosition[0] = newPositionX;
         this.currentPosition[1] = newPositionY;
@@ -184,12 +183,9 @@ public abstract class Player implements IPlayer {
      *
      * @param newVelocityX The new x-component of the player's velocity.
      * @param newVelocityY The new y-component of the player's velocity.
-     * @throws IllegalArgumentException If either of the new velocity is negative.
      */
     @Override
     public void setVelocity(int newVelocityX, int newVelocityY) {
-        if (newVelocityX < 0 || newVelocityY < 0)
-            throw new IllegalArgumentException("Velocity cannot be negative.");
 
         this.currentVelocity[0] = newVelocityX;
         this.currentVelocity[1] = newVelocityY;

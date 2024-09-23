@@ -80,11 +80,6 @@ class PlayerTest {
     }
 
     @Test
-    void testSetInvalidVelocity() {
-        assertThrows(IllegalArgumentException.class, () -> player.setVelocity(-1, -1));
-    }
-
-    @Test
     void testGetRank() {
         assertEquals(1, player.getRank());
     }
